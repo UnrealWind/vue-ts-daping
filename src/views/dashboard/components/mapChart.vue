@@ -443,14 +443,14 @@ const options = {
           featureType: 'land',
           elementType: 'all',
           stylers: {
-            color: 'transparent'
+            color: '#09416a'
           }
         },
         {
           featureType: 'boundary',
           elementType: 'geometry',
           stylers: {
-            color: '#064f85'
+            color: '#004981'
           }
         },
         {
@@ -543,7 +543,7 @@ const options = {
           featureType: 'boundary',
           elementType: 'geometry.fill',
           stylers: {
-            color: '#029fd4'
+            color: '#cccccc'
           }
         },
         {

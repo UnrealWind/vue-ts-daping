@@ -51,12 +51,12 @@ export default new Router({
       ]
     },
     {
-      path: '/form',
+      path: '/behavior',
       component: Layout,
       children: [
         {
           path: 'index',
-          component: () => import(/* webpackChunkName: "form" */ '@/views/form/index.vue'),
+          component: () => import(/* webpackChunkName: "form" */ '@/views/behavior/index.vue'),
           meta: {
             title: '用户行为分析',
             icon: 'form'

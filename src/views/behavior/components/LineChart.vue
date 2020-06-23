@@ -13,27 +13,19 @@ import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
 const options = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
-    }
-  },
+  grid: { containLabel: true, top: 30, left: 10, bottom: 10 },
   legend: {
-    data: ['用户访问量', '用户数量'],
+    data: ['用户总数趋势'],
     textStyle: {
       color: '#fff'
     }
   },
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    containLabel: true
-  },
   xAxis: [{
-    type: 'value',
-    boundaryGap: [0, 0.01],
+    type: 'category',
+    data: ['01/01', '01/02', '01/03', '01/04', '01/05', '01/06', '01/07',
+      '01/08', '01/09', '01/10', '01/11', '01/12', '01/13', '01/14',
+      '01/15', '01/16', '01/17', '01/18', '01/19', '01/20', '01/21',
+      '01/22', '01/23', '01/24', '01/25', '01/26', '01/27', '01/28', '01/29', '01/30', '01/31'],
     axisLine: {
       lineStyle: {
         type: 'solid',
@@ -49,8 +41,7 @@ const options = {
     }
   }],
   yAxis: [{
-    type: 'category',
-    data: ['技术培训', '自助服务', '工单管理', '服务网点', '服务信息', '技术支持', '服务工具', '网上商城'],
+    type: 'value',
     axisLine: {
       lineStyle: {
         type: 'solid',
@@ -65,30 +56,12 @@ const options = {
       }
     }
   }],
-  series: [
-    {
-      name: '用户访问量',
-      type: 'bar',
-      data: [18203, 23489, 29034, 104970, 131744, 60230, 84970, 44970],
-      itemStyle: {
-        normal: {
-          color: 'rgb(250, 173, 20)',
-          barBorderRadius: 7
-        }
-      }
-    },
-    {
-      name: '用户数量',
-      type: 'bar',
-      data: [19325, 23438, 31000, 121594, 134141, 61807, 23489, 29034],
-      itemStyle: {
-        normal: {
-          color: 'rgb(121, 218, 255)',
-          barBorderRadius: 7
-        }
-      }
-    }
-  ]
+  series: [{
+    name: '用户总数趋势',
+    data: [820, 932, 1030, 934, 820, 820, 820, 820, 932, 901, 934, 820, 820, 820, 820, 932, 901, 934, 820, 820, 820, 820, 932, 901, 934, 820, 1030, 1020, 820, 920, 1320],
+    type: 'line',
+    smooth: true
+  }]
 }
 
 @Component({
@@ -97,7 +70,7 @@ const options = {
 export default class extends mixins(ResizeMixin) {
   @Prop({ default: 'chart' }) private className!: string
   @Prop({ default: '100%' }) private width!: string
-  @Prop({ default: '415px' }) private height!: string
+  @Prop({ default: '350px' }) private height!: string
 
   mounted() {
     this.$nextTick(() => {
@@ -115,7 +88,7 @@ export default class extends mixins(ResizeMixin) {
 
   private initChart() {
     this.chart = echarts.init(this.$el as HTMLDivElement, 'macarons')
-    this.chart.setOption(options as EChartOption<EChartOption.SeriesBar>)
+    this.chart.setOption(options as EChartOption<EChartOption.SeriesLine>)
   }
 }
 </script>

@@ -63,7 +63,7 @@ const placeHolderStyle = {
 }
 const options = {
   backgroundColor: 'transparent',
-  color: ['#2078d1', '#8a00ec', '#ff00f3', '#fb0065', '#ff941b'],
+  color: ['#fbf320', '#3dfffb', '#ffffff', '#2bcafb', '#397cfd', '#faad14'],
   tooltip: {
     show: true,
     formatter: '{b} <br/> {c} ({d}%)'
@@ -136,7 +136,7 @@ const options = {
     name: 'Line 2',
     type: 'pie',
     clockWise: false,
-    radius: [40, 70],
+    radius: [60, 70],
     itemStyle: dataStyle,
     hoverAnimation: false,
 
@@ -212,7 +212,7 @@ const options = {
     type: 'pie',
     clockWise: false,
     hoverAnimation: false,
-    radius: [50, 70],
+    radius: [60, 70],
     itemStyle: dataStyle,
 
     data: [{

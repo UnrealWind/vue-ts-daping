@@ -14,7 +14,7 @@
           <div class="title-line" />
           <div
             class="chart-wrapper"
-            style="background-color:rgba(0,16,52,0.8);"
+            style="background-color:rgba(0,16,52,0.8);height:450px;overflow: hidden"
           >
             <el-row>
               <h5><span class="point">·</span>连接量</h5>
@@ -92,7 +92,7 @@
           <div class="title-line" />
           <div
             class="chart-wrapper"
-            style="background-color:rgba(0,16,52,0.8);"
+            style="background-color:rgba(0,16,52,0.8);height:450px;overflow: hidden"
           >
             <el-row>
               <h5><span class="point">·</span>故障统计</h5>
@@ -136,9 +136,9 @@
 
     <el-row class="bottom-part">
       <el-col
-        :xs="6"
-        :sm="6"
-        :lg="6"
+        :xs="5"
+        :sm="5"
+        :lg="5"
       >
         <div>
           <h5><span class="point">·</span>区域分析</h5>
@@ -148,9 +148,9 @@
         </div>
       </el-col>
       <el-col
-        :xs="6"
-        :sm="6"
-        :lg="6"
+        :xs="4"
+        :sm="4"
+        :lg="4"
       >
         <div>
           <h5><span class="point">·</span>任务处理方式</h5>
@@ -160,9 +160,21 @@
         </div>
       </el-col>
       <el-col
-        :xs="6"
-        :sm="6"
-        :lg="6"
+        :xs="5"
+        :sm="5"
+        :lg="5"
+      >
+        <div>
+          <h5><span class="point">·</span>当日故障报警情况</h5>
+          <div class="chart-wrapper">
+            <bar-chart5 />
+          </div>
+        </div>
+      </el-col>
+      <el-col
+        :xs="5"
+        :sm="5"
+        :lg="5"
       >
         <div>
           <h5><span class="point">·</span>解除时间比例</h5>
@@ -172,14 +184,14 @@
         </div>
       </el-col>
       <el-col
-        :xs="6"
-        :sm="6"
-        :lg="6"
+        :xs="5"
+        :sm="5"
+        :lg="5"
       >
         <div>
-          <h5><span class="point">·</span>当日故障报警情况</h5>
+          <h5><span class="point">·</span>故障码排名</h5>
           <div class="chart-wrapper">
-            <bar-chart5 />
+            <bar-chart6 />
           </div>
         </div>
       </el-col>
@@ -196,6 +208,7 @@ import BarChart2 from './components/BarChart2.vue'
 import BarChart3 from './components/BarChart3.vue'
 import BarChart4 from './components/BarChart4.vue'
 import BarChart5 from './components/BarChart5.vue'
+import BarChart6 from './components/BarChart6.vue'
 
 import PieChart from './components/PieChart.vue'
 import PieChart1 from './components/PieChart1.vue'
@@ -212,6 +225,7 @@ import mapChart from '@/views/dashboard/components/mapChart.vue'
       BarChart3,
       BarChart4,
       BarChart5,
+      BarChart6,
       PieChart,
       PieChart1,
       PieChart2,
@@ -219,12 +233,6 @@ import mapChart from '@/views/dashboard/components/mapChart.vue'
     }
   })
 export default class extends Vue {
-  // todo list
-  // 地图背景透明      实现不了
-  // 地图点的maxval      这个并不能设置一个上限的值，除非是拿到所有数据之后再处理,但是点的大小每天都会因为最大值而改变
-  // 国界线，粗，浅 =》 灰白
-  // 陆地颜色较重
-  // 发动机数量分析  区域分析背景色，间隔
   // 多饼图， 动态图
 }
 </script>
@@ -234,7 +242,7 @@ export default class extends Vue {
     position: relative;
     background-image: url("http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/4cf50aa8e6ca597f42e08b3c0745d933.png");
     .margin-top {
-      margin-top: 40px;
+      margin-top: 37px;
       padding: 10px;
     }
     .center{

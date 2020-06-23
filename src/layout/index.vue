@@ -8,9 +8,17 @@
       class="drawer-bg"
       @click="handleClickOutside"
     />
-    <sidebar class="sidebar-container" />
+    <span
+      @mouseover="sidebar.opened = true"
+      @mouseleave="sidebar.opened = false"
+    >
+      <sidebar
+        class="sidebar-container"
+      />
+    </span>
+    <screenfull class="fullscreen right-menu-item hover-effect" />
     <div class="main-container">
-      <!--      <navbar />-->
+      <!--<navbar />-->
       <app-main />
     </div>
   </div>
@@ -20,8 +28,10 @@
 import { Component } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import { DeviceType, AppModule } from '@/store/modules/app'
+import Screenfull from '@/components/Screenfull/index.vue'
 import { AppMain, Navbar, Sidebar } from './components'
 import ResizeMixin from './mixin/resize'
+// import de from 'element-ui/src/locale/lang/de'
 // import fa from 'element-ui/src/locale/lang/fa'
 
 @Component({
@@ -29,7 +39,8 @@ import ResizeMixin from './mixin/resize'
   components: {
     AppMain,
     Navbar,
-    Sidebar
+    Sidebar,
+    Screenfull
   }
 })
 export default class extends mixins(ResizeMixin) {
@@ -72,6 +83,7 @@ export default class extends mixins(ResizeMixin) {
 }
 
 .main-container {
+
   min-height: 100%;
   transition: margin-left .28s;
   margin-left: $sideBarWidth;
@@ -93,11 +105,11 @@ export default class extends mixins(ResizeMixin) {
 
 .hideSidebar {
   .main-container {
-    margin-left: 54px;
+    margin-left: 1px;
   }
 
   .sidebar-container {
-    width: 54px !important;
+    width: 1px !important;
   }
 }
 
@@ -132,4 +144,12 @@ export default class extends mixins(ResizeMixin) {
     transition: none;
   }
 }
+  .fullscreen {
+    position: absolute;
+    right: 20px;
+    top:20px;
+    color: #ffffff;
+    font-size: 20px;
+    z-index: 999;
+  }
 </style>

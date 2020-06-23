@@ -13,16 +13,27 @@ import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
 const options = {
-  grid: { containLabel: true, top: 30, left: 10, bottom: 10 },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
   legend: {
-    data: ['用户总数趋势'],
+    data: ['用户访问量'],
     textStyle: {
       color: '#fff'
     }
   },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
   xAxis: [{
-    type: 'category',
-    data: ['01/01', '01/02', '01/03', '01/04', '01/05', '01/06', '01/07'],
+    type: 'value',
+    boundaryGap: [0, 0.01],
     axisLine: {
       lineStyle: {
         type: 'solid',
@@ -38,7 +49,8 @@ const options = {
     }
   }],
   yAxis: [{
-    type: 'value',
+    type: 'category',
+    data: ['技术培训', '自助服务', '工单管理', '服务网点', '服务信息', '技术支持', '服务工具', '网上商城'],
     axisLine: {
       lineStyle: {
         type: 'solid',
@@ -53,12 +65,19 @@ const options = {
       }
     }
   }],
-  series: [{
-    name: '用户总数趋势',
-    data: [820, 932, 901, 934, 1290, 1330, 1320],
-    type: 'line',
-    smooth: true
-  }]
+  series: [
+    {
+      name: '用户访问量',
+      type: 'bar',
+      data: [18203, 23489, 29034, 44970, 60230, 84970, 104970, 131744],
+      itemStyle: {
+        normal: {
+          color: 'rgb(121, 218, 255)',
+          barBorderRadius: 7
+        }
+      }
+    }
+  ]
 }
 
 @Component({
@@ -67,7 +86,7 @@ const options = {
 export default class extends mixins(ResizeMixin) {
   @Prop({ default: 'chart' }) private className!: string
   @Prop({ default: '100%' }) private width!: string
-  @Prop({ default: '200px' }) private height!: string
+  @Prop({ default: '580px' }) private height!: string
 
   mounted() {
     this.$nextTick(() => {
@@ -85,7 +104,7 @@ export default class extends mixins(ResizeMixin) {
 
   private initChart() {
     this.chart = echarts.init(this.$el as HTMLDivElement, 'macarons')
-    this.chart.setOption(options as EChartOption<EChartOption.SeriesLine>)
+    this.chart.setOption(options as EChartOption<EChartOption.SeriesBar>)
   }
 }
 </script>

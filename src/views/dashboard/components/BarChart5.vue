@@ -93,7 +93,7 @@ const options = {
       name: '派工',
       type: 'bar',
       stack: '总量',
-      barWidth: '50%',
+      barWidth: '40%',
       data: [220, 182, 191, 234, 290, 330, 310],
       itemStyle: {
         normal: {

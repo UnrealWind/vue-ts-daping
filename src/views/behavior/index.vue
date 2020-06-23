@@ -1,9 +1,43 @@
 <template>
   <div class="dashboard-editor-container">
+    <el-select
+      v-model="type"
+      placeholder="请选择渠道"
+      clearable
+      class="filter-item fixed-select"
+      style="width: 130px"
+    >
+      <el-option
+        label="XCEC"
+        value="0"
+      />
+      <el-option
+        label="ACPL"
+        value="1"
+      />
+      <el-option
+        label="DCEC"
+        value="2"
+      />
+      <el-option
+        label="BFCEC"
+        value="3"
+      />
+      <el-option
+        label="GCIC"
+        value="4"
+      />
+    </el-select>
+    <el-date-picker
+      v-model="dateTime"
+      placeholder="选择日期"
+      class="fixed-select fixed-select-date"
+      type="month"
+    />
     <el-row>
       <div>
         <h3 class="center">
-          APP差异化用户行为分析和引流
+          e路康明斯用户及功能看板
         </h3>
         <h4 class="center">
           2020-06-08 12:00:00
@@ -11,63 +45,71 @@
         <div class="bg-shiny" />
       </div>
       <el-col
-        :xs="16"
-        :sm="16"
-        :lg="16"
+        :xs="8"
+        :sm="8"
+        :lg="8"
       >
         <h3 class="padding10">
           用户行为分析
         </h3>
         <div class="title-line" />
-        <div class="chart-wrapper">
+        <div
+          class="chart-wrapper"
+          style="padding-top: 140px;"
+        >
+          <div class="total-count">
+            <div>
+              <div>总连接量</div>
+              <div>5671</div>
+            </div>
+            <div>
+              <div>总活跃量</div>
+              <div>5128</div>
+            </div>
+          </div>
           <bar-chart />
         </div>
-
-        <el-row>
-          <h3 class="padding10">
-            用户数量和日活量统计
-          </h3>
-          <div class="title-line" />
-          <el-col
-            :xs="12"
-            :sm="12"
-            :lg="12"
-          >
-            <div class="chart-wrapper">
-              <pie-chart />
-              <p>用户总数<br><span>5172</span></p>
-            </div>
-          </el-col>
-          <el-col
-            :xs="12"
-            :sm="12"
-            :lg="12"
-          >
-            <div class="chart-wrapper">
-              <pie-chart />
-              <p>日活量<br><span>4172</span></p>
-            </div>
-          </el-col>
-        </el-row>
       </el-col>
       <el-col
         :xs="8"
         :sm="8"
         :lg="8"
-        style="position: absolute;right: 0"
       >
         <h3 class="padding10">
-          用户行为分析
+          用户总数分析
         </h3>
         <div class="title-line" />
         <div class="chart-wrapper">
+          <pie-chart />
+          <p>
+            用户总数<br><span class="yellow">5172<img src="https://img.alicdn.com/tfs/TB1nXLptQvoK1RjSZFDXXXY3pXa-800-800.png"></span>
+          </p>
+        </div>
+        <div
+          class="chart-wrapper"
+          style="margin: 60px 0 40px 0;"
+        >
           <line-chart />
         </div>
+      </el-col>
+      <el-col
+        :xs="8"
+        :sm="8"
+        :lg="8"
+      >
+        <h3 class="padding10">
+          日活量分析
+        </h3>
+        <div class="title-line" />
         <div class="chart-wrapper">
-          <line-chart1 />
+          <pie-chart />
+          <p>日活量<br><span class="yellow">4172<img src="https://img.alicdn.com/tfs/TB1nXLptQvoK1RjSZFDXXXY3pXa-800-800.png"></span></p>
         </div>
-        <div class="chart-wrapper margin-top30">
-          <line-chart2 />
+        <div
+          class="chart-wrapper"
+          style="margin-top: 60px;"
+        >
+          <line-chart1 />
         </div>
       </el-col>
     </el-row>
@@ -94,7 +136,8 @@ import LineChart2 from './components/LineChart2.vue'
     }
   })
 export default class extends Vue {
-
+    private type:string = ''
+    private dateTime:string =''
 }
 </script>
 
@@ -102,6 +145,22 @@ export default class extends Vue {
   .dashboard-editor-container {
     position: relative;
     background-image: url("http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/4cf50aa8e6ca597f42e08b3c0745d933.png");
+    .fixed-select ::v-deep input {
+      background: #2d3a4b;
+      color:#ffffff;
+    }
+    .fixed-select {
+      position: absolute;
+      right: 300px;
+      top:20px;
+      z-index: 999999;
+    }
+    .fixed-select-date {
+      right: 60px;
+      ::v-deep input {
+        background: #2d3a4b;
+      }
+    }
     .margin-top {
       margin-top: 40px;
       padding: 10px;
@@ -194,7 +253,7 @@ export default class extends Vue {
         margin-left: 30px;
       }
       position: absolute;
-      top:0px;
+      top:20px;
       left:30%;
       z-index:999;
     }
@@ -207,6 +266,20 @@ export default class extends Vue {
         text-align: center;
         width: 100%;
         top:120px;
+        .yellow {
+          position: relative;
+          color:#faad14;
+          font-size: 20px;
+        }
+      }
+      img {
+        z-index: 998;
+        height: 120px;
+        width: 120px;
+        position: absolute;
+        margin:0 auto;
+        top: -62px;
+        left: -38px;
       }
     }
     h3,h4,h5 {
