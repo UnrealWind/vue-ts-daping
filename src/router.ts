@@ -44,22 +44,37 @@ export default new Router({
           path: 'dashboard',
           component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
           meta: {
-            title: '主动服务分析',
+            title: 'e路康明斯用户及功能看板',
             icon: 'dashboard'
           }
         }
       ]
     },
     {
-      path: '/behavior',
+      path: '/actService',
+      component: Layout,
+      redirect: '/actService',
+      children: [
+        {
+          path: 'index',
+          component: () => import(/* webpackChunkName: "form" */ '@/views/actService/index.vue'),
+          meta: {
+            title: '车联网及HMLD主动服务',
+            icon: 'form'
+          }
+        }
+      ]
+    },
+    {
+      path: '/dealer',
       component: Layout,
       children: [
         {
           path: 'index',
-          component: () => import(/* webpackChunkName: "form" */ '@/views/behavior/index.vue'),
+          component: () => import(/* webpackChunkName: "form" */ '@/views/dealer/index.vue'),
           meta: {
-            title: '用户行为分析',
-            icon: 'form'
+            title: '经销商服务网络分布',
+            icon: 'international'
           }
         }
       ]

@@ -8,28 +8,69 @@
 <script lang="ts">
 // eslint-disable-next-line
 import echarts, { EChartOption } from 'echarts'
-import { Component, Prop, Watch } from 'vue-property-decorator'
+import { Component, Prop } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
-export interface ILineChartData {
-  expectedData: number[]
-  actualData: number[]
+const options = {
+  grid: { containLabel: true, top: 30, left: 10, bottom: 10 },
+  legend: {
+    data: ['用户总数趋势'],
+    textStyle: {
+      color: '#fff'
+    }
+  },
+  xAxis: [{
+    type: 'category',
+    data: ['01/01', '01/02', '01/03', '01/04', '01/05', '01/06', '01/07',
+      '01/08', '01/09', '01/10', '01/11', '01/12', '01/13', '01/14',
+      '01/15', '01/16', '01/17', '01/18', '01/19', '01/20', '01/21',
+      '01/22', '01/23', '01/24', '01/25', '01/26', '01/27', '01/28', '01/29', '01/30', '01/31'],
+    axisLine: {
+      lineStyle: {
+        type: 'solid',
+        color: '#fff', // 左边线的颜色
+        width: '2'// 坐标线的宽度
+      }
+    },
+    axisLabel: {
+      textStyle: {
+        color: '#fff'// 坐标值得具体的颜色
+
+      }
+    }
+  }],
+  yAxis: [{
+    type: 'value',
+    axisLine: {
+      lineStyle: {
+        type: 'solid',
+        color: '#fff', // 左边线的颜色
+        width: '2'// 坐标线的宽度
+      }
+    },
+    axisLabel: {
+      textStyle: {
+        color: '#fff'// 坐标值得具体的颜色
+
+      }
+    }
+  }],
+  series: [{
+    name: '用户总数趋势',
+    data: [820, 932, 1030, 934, 820, 820, 820, 820, 932, 901, 934, 820, 820, 820, 820, 932, 901, 934, 820, 820, 820, 820, 932, 901, 934, 820, 1030, 1020, 820, 920, 1320],
+    type: 'line',
+    smooth: true
+  }]
 }
 
 @Component({
-  name: 'LineChart'
+  name: 'BarChart'
 })
 export default class extends mixins(ResizeMixin) {
-  @Prop({ required: true }) private chartData!: ILineChartData
   @Prop({ default: 'chart' }) private className!: string
   @Prop({ default: '100%' }) private width!: string
   @Prop({ default: '350px' }) private height!: string
-
-  @Watch('chartData', { deep: true })
-  private onChartDataChange(value: ILineChartData) {
-    this.setOptions(value)
-  }
 
   mounted() {
     this.$nextTick(() => {
@@ -47,76 +88,7 @@ export default class extends mixins(ResizeMixin) {
 
   private initChart() {
     this.chart = echarts.init(this.$el as HTMLDivElement, 'macarons')
-    this.setOptions(this.chartData)
-  }
-
-  private setOptions(chartData: ILineChartData) {
-    if (this.chart) {
-      this.chart.setOption({
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
-        },
-        grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
-          containLabel: true
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
-          padding: 8
-        },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
-        legend: {
-          data: ['expected', 'actual']
-        },
-        series: [{
-          name: 'expected',
-          itemStyle: {
-            color: '#FF005A',
-            lineStyle: {
-              color: '#FF005A',
-              width: 2
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: chartData.expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            color: '#3888fa',
-            lineStyle: {
-              color: '#3888fa',
-              width: 2
-            },
-            areaStyle: {
-              color: '#f3f8ff'
-            }
-          },
-          data: chartData.actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
-      } as EChartOption<EChartOption.SeriesLine>)
-    }
+    this.chart.setOption(options as EChartOption<EChartOption.SeriesLine>)
   }
 }
 </script>

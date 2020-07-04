@@ -12,76 +12,72 @@ import { Component, Prop } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
-const myColor = ['rgb(101, 245, 243)']
-const data = {
-  grade: ['others', 'DCEC', 'ACPL', 'GCIC', 'XCEC', 'BFCEC'],
-  cost: [40, 30, 40, 50, 60, 70, 50, 40],
-  totalCost: [100, 100, 100, 100, 100, 100, 100, 100],
-  dataCost: [100, 100, 100, 100, 100, 100, 100, 100]
-}
-
 const options = {
-  backgroundColor: 'transparent',
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  legend: {
+    data: ['用户访问量'],
+    textStyle: {
+      color: '#fff'
+    }
+  },
   grid: {
-    left: '60',
-    right: '10',
-    top: '20',
-    bottom: '0'
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
   },
-  xAxis: {
-    show: false
-  },
-  yAxis: {
-    type: 'category',
-    axisLabel: {
-      margin: 10,
-      show: true,
-      color: '#ccc',
-      fontSize: 12
-    },
-    axisTick: {
-      show: false
-    },
+  xAxis: [{
+    type: 'value',
+    boundaryGap: [0, 0.01],
     axisLine: {
-      show: false
-    },
-    data: data.grade
-  },
-  series: [{
-    type: 'bar',
-    barGap: '-65%',
-    barWidth: '40%',
-    itemStyle: {
-      normal: {
-        borderColor: '#4DCEF8',
-        borderWidth: 1,
-        barBorderRadius: 15,
-        color: 'rgba(102, 102, 102,0)'
+      lineStyle: {
+        type: 'solid',
+        color: '#fff', // 左边线的颜色
+        width: '2'// 坐标线的宽度
       }
     },
-    z: 1,
-    data: data.totalCost
-    // data: da
-  }, {
-    type: 'bar',
-    barGap: '-85%',
-    barWidth: '28%',
-    itemStyle: {
-      normal: {
-        barBorderRadius: 16,
-        color: function(params) {
-          var num = myColor.length
-          return myColor[params.dataIndex % num]
+    axisLabel: {
+      textStyle: {
+        color: '#fff'// 坐标值得具体的颜色
+
+      }
+    }
+  }],
+  yAxis: [{
+    type: 'category',
+    data: ['技术培训', '自助服务', '工单管理', '服务网点', '服务信息', '技术支持', '服务工具', '网上商城'],
+    axisLine: {
+      lineStyle: {
+        type: 'solid',
+        color: '#fff', // 左边线的颜色
+        width: '2'// 坐标线的宽度
+      }
+    },
+    axisLabel: {
+      textStyle: {
+        color: '#fff'// 坐标值得具体的颜色
+
+      }
+    }
+  }],
+  series: [
+    {
+      name: '用户访问量',
+      type: 'bar',
+      data: [18203, 23489, 29034, 44970, 60230, 84970, 104970, 131744],
+      itemStyle: {
+        normal: {
+          color: 'rgb(121, 218, 255)',
+          barBorderRadius: 7
         }
       }
-    },
-    max: 1,
-    labelLine: {
-      show: true
-    },
-    z: 2,
-    data: data.cost
-  }]
+    }
+  ]
 }
 
 @Component({
@@ -90,7 +86,7 @@ const options = {
 export default class extends mixins(ResizeMixin) {
   @Prop({ default: 'chart' }) private className!: string
   @Prop({ default: '100%' }) private width!: string
-  @Prop({ default: '182px' }) private height!: string
+  @Prop({ default: '580px' }) private height!: string
 
   mounted() {
     this.$nextTick(() => {

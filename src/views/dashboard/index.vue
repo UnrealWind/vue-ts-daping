@@ -1,71 +1,62 @@
 <template>
   <div class="dashboard-editor-container">
+    <el-select
+      v-model="type"
+      placeholder="请选择渠道"
+      clearable
+      class="filter-item fixed-select"
+      style="width: 130px"
+    >
+      <el-option
+        label="XCEC"
+        value="0"
+      />
+      <el-option
+        label="ACPL"
+        value="1"
+      />
+      <el-option
+        label="DCEC"
+        value="2"
+      />
+      <el-option
+        label="BFCEC"
+        value="3"
+      />
+      <el-option
+        label="GCIC"
+        value="4"
+      />
+    </el-select>
+    <el-date-picker
+      v-model="dateTime"
+      placeholder="选择日期"
+      class="fixed-select fixed-select-date"
+      type="month"
+    />
     <el-row>
+      <div>
+        <h3 class="center">
+          e路康明斯用户及功能看板
+        </h3>
+        <h4 class="center">
+          2020-06-08 12:00:00
+        </h4>
+        <div class="bg-shiny" />
+      </div>
       <el-col
-        :xs="6"
-        :sm="6"
-        :lg="6"
-        style="position: absolute;left: 0;z-index: 999;"
+        :xs="8"
+        :sm="8"
+        :lg="8"
       >
-        <div class="left-part">
-          <h3 class="margin-top">
-            发动机数量分析
-          </h3>
-          <div class="title-line" />
-          <div
-            class="chart-wrapper"
-            style="background-color:rgba(0,16,52,0.8);height:450px;overflow: hidden"
-          >
-            <el-row>
-              <h5><span class="point">·</span>连接量</h5>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <pie-chart />
-              </el-col>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <pie-chart />
-              </el-col>
-              <h5><span class="point">·</span>活跃量</h5>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <pie-chart />
-              </el-col>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <pie-chart />
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-      </el-col>
-      <el-col
-        :xs="24"
-        :sm="24"
-        :lg="24"
-      >
-        <div>
-          <h3 class="center">
-            车联网及HMLD主动服务
-          </h3>
-          <h4 class="center">
-            2020-06-08 12:00:00
-          </h4>
-          <div class="bg-shiny" />
-        </div>
-        <div class="chart-wrapper">
+        <h3 class="padding10">
+          用户行为分析
+        </h3>
+        <div class="title-line" />
+        <div
+          class="chart-wrapper"
+          style="padding-top: 140px;"
+        >
           <div class="total-count">
             <div>
               <div>总连接量</div>
@@ -76,123 +67,49 @@
               <div>5128</div>
             </div>
           </div>
-          <map-chart />
+          <bar-chart />
         </div>
       </el-col>
       <el-col
-        :xs="6"
-        :sm="6"
-        :lg="6"
-        style="position: absolute;right: 0;"
+        :xs="8"
+        :sm="8"
+        :lg="8"
       >
-        <div class="right-part">
-          <h3 class="margin-top">
-            故障分析
-          </h3>
-          <div class="title-line" />
-          <div
-            class="chart-wrapper"
-            style="background-color:rgba(0,16,52,0.8);height:450px;overflow: hidden"
-          >
-            <el-row>
-              <h5><span class="point">·</span>故障统计</h5>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <bar-chart />
-                <h6>主机厂</h6>
-              </el-col>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <bar-chart1 />
-                <h6>SMN</h6>
-              </el-col>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <bar-chart2 />
-                <h6>故障等级</h6>
-              </el-col>
-              <el-col
-                :xs="12"
-                :sm="12"
-                :lg="12"
-              >
-                <bar-chart3 />
-                <h6>区域</h6>
-              </el-col>
-            </el-row>
-          </div>
+        <h3 class="padding10">
+          用户总数分析
+        </h3>
+        <div class="title-line" />
+        <div class="chart-wrapper">
+          <pie-chart :data="pieChartData" />
+          <p>
+            用户总数<br><span class="yellow">5172<img src="https://img.alicdn.com/tfs/TB1nXLptQvoK1RjSZFDXXXY3pXa-800-800.png"></span>
+          </p>
         </div>
-      </el-col>
-    </el-row>
-
-    <el-row class="bottom-part">
-      <el-col
-        :xs="5"
-        :sm="5"
-        :lg="5"
-      >
-        <div>
-          <h5><span class="point">·</span>区域分析</h5>
-          <div class="chart-wrapper">
-            <bar-chart4 />
-          </div>
+        <div
+          class="chart-wrapper"
+          style="margin: 60px 0 40px 0;"
+        >
+          <line-chart />
         </div>
       </el-col>
       <el-col
-        :xs="4"
-        :sm="4"
-        :lg="4"
+        :xs="8"
+        :sm="8"
+        :lg="8"
       >
-        <div>
-          <h5><span class="point">·</span>任务处理方式</h5>
-          <div class="chart-wrapper">
-            <pie-chart1 />
-          </div>
+        <h3 class="padding10">
+          日活量分析
+        </h3>
+        <div class="title-line" />
+        <div class="chart-wrapper">
+          <pie-chart :data="pieChartData1" />
+          <p>日活量<br><span class="yellow">4172<img src="https://img.alicdn.com/tfs/TB1nXLptQvoK1RjSZFDXXXY3pXa-800-800.png"></span></p>
         </div>
-      </el-col>
-      <el-col
-        :xs="5"
-        :sm="5"
-        :lg="5"
-      >
-        <div>
-          <h5><span class="point">·</span>当日故障报警情况</h5>
-          <div class="chart-wrapper">
-            <bar-chart5 />
-          </div>
-        </div>
-      </el-col>
-      <el-col
-        :xs="5"
-        :sm="5"
-        :lg="5"
-      >
-        <div>
-          <h5><span class="point">·</span>解除时间比例</h5>
-          <div class="chart-wrapper">
-            <pie-chart2 />
-          </div>
-        </div>
-      </el-col>
-      <el-col
-        :xs="5"
-        :sm="5"
-        :lg="5"
-      >
-        <div>
-          <h5><span class="point">·</span>故障码排名</h5>
-          <div class="chart-wrapper">
-            <bar-chart6 />
-          </div>
+        <div
+          class="chart-wrapper"
+          style="margin-top: 60px;"
+        >
+          <line-chart1 />
         </div>
       </el-col>
     </el-row>
@@ -203,37 +120,30 @@
 import 'echarts/theme/macarons.js' // Theme used in BarChart, LineChart, PieChart and RadarChart
 import { Component, Vue } from 'vue-property-decorator'
 import BarChart from './components/BarChart.vue'
-import BarChart1 from './components/BarChart1.vue'
-import BarChart2 from './components/BarChart2.vue'
-import BarChart3 from './components/BarChart3.vue'
-import BarChart4 from './components/BarChart4.vue'
-import BarChart5 from './components/BarChart5.vue'
-import BarChart6 from './components/BarChart6.vue'
-
 import PieChart from './components/PieChart.vue'
-import PieChart1 from './components/PieChart1.vue'
-import PieChart2 from './components/PieChart2.vue'
-
-import mapChart from '@/views/dashboard/components/mapChart.vue'
+import LineChart from './components/LineChart.vue'
+import LineChart1 from './components/LineChart1.vue'
 
   @Component({
     name: 'DashboardAdmin',
     components: {
-      BarChart,
-      BarChart1,
-      BarChart2,
-      BarChart3,
-      BarChart4,
-      BarChart5,
-      BarChart6,
       PieChart,
-      PieChart1,
-      PieChart2,
-      mapChart
+      BarChart,
+      LineChart,
+      LineChart1
     }
   })
 export default class extends Vue {
-  // 多饼图， 动态图
+    private type:string = ''
+    private dateTime:string =''
+
+    private pieChartData:object[] = [{ label: 'XCEC', value: 100 }, { label: 'ACPL', value: 70 }, { label: 'DCEC', value: 60 },
+      { label: 'BFCEC', value: 90 }, { label: 'GCIC', value: 40 }]
+
+    private pieChartData1:object[] = [{ label: 'XCEC', value: 40 }, { label: 'ACPL', value: 100 }, { label: 'DCEC', value: 90 },
+      { label: 'BFCEC', value: 60 }, { label: 'GCIC', value: 70 }]
+
+    private barChartData:object[] = []
 }
 </script>
 
@@ -241,12 +151,35 @@ export default class extends Vue {
   .dashboard-editor-container {
     position: relative;
     background-image: url("http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/4cf50aa8e6ca597f42e08b3c0745d933.png");
+    .fixed-select ::v-deep input {
+      background: #2d3a4b;
+      color:#ffffff;
+    }
+    .fixed-select {
+      position: absolute;
+      right: 300px;
+      top:20px;
+      z-index: 999999;
+    }
+    .fixed-select-date {
+      right: 60px;
+      ::v-deep input {
+        background: #2d3a4b;
+      }
+    }
     .margin-top {
-      margin-top: 37px;
+      margin-top: 40px;
       padding: 10px;
+    }
+    .padding10 {
+      padding:0 10px 10px 10px;
+      margin-top: 0;
     }
     .center{
       text-align: center;
+    }
+    .margin-top30 {
+      margin-top: 30px;
     }
     .point {
       color: yellow;
@@ -326,13 +259,34 @@ export default class extends Vue {
         margin-left: 30px;
       }
       position: absolute;
-      top:0px;
+      top:20px;
       left:30%;
       z-index:999;
     }
     .chart-wrapper {
       padding: 0;
       position: relative;
+      p {
+        position: absolute;
+        z-index: 999;
+        text-align: center;
+        width: 100%;
+        top:120px;
+        .yellow {
+          position: relative;
+          color:#faad14;
+          font-size: 20px;
+        }
+      }
+      img {
+        z-index: 998;
+        height: 120px;
+        width: 120px;
+        position: absolute;
+        margin:0 auto;
+        top: -62px;
+        left: -38px;
+      }
     }
     h3,h4,h5 {
       color: #ffffff;
