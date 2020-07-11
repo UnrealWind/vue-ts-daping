@@ -1,27 +1,130 @@
 <template>
   <div
-    :id="id"
     :class="className"
     :style="{height: height, width: width}"
   />
 </template>
 
 <script lang="ts">
+// eslint-disable-next-line
 import echarts, { EChartOption } from 'echarts'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
-import ResizeMixin from './mixins/resize'
+import ResizeMixin from '@/components/Charts/mixins/resize'
+
+function getOptions() {
+  return {
+    grid: { containLabel: true, top: 35, left: 10, bottom: 5, right: 10 },
+    color: ['#2483ff', '#a3f6ff', '#2bcafb', '#fff'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    legend: {
+      data: ['用户总数趋势'],
+      textStyle: {
+        color: '#ccc',
+        fontSize: 12,
+        padding: [10, 0, 0, 0]
+      }
+    },
+    xAxis: [{
+      type: 'category',
+      data: ['01/01', '01/02', '01/03', '01/04', '01/05', '01/06', '01/07',
+        '01/08', '01/09', '01/10', '01/11', '01/12', '01/13', '01/14',
+        '01/15', '01/16', '01/17', '01/18', '01/19', '01/20', '01/21',
+        '01/22', '01/23', '01/24', '01/25', '01/26', '01/27', '01/28', '01/29', '01/30', '01/31'],
+      boundaryGap: false,
+      axisLine: {
+        lineStyle: {
+          type: 'solid',
+          color: '#fff', // 左边线的颜色
+          width: '2'// 坐标线的宽度
+        }
+      },
+      splitLine: {
+        show: false,
+        lineStyle: {
+          color: ['#315070'],
+          width: 1,
+          type: 'solid'
+        }
+      },
+      axisLabel: {
+        textStyle: {
+          color: '#ccc'// 坐标值得具体的颜色
+        }
+      }
+    }],
+    yAxis: [{
+      type: 'value',
+      axisLine: {
+        lineStyle: {
+          type: 'solid',
+          color: '#fff', // 左边线的颜色
+          width: '2'// 坐标线的宽度
+        }
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: ['#315070'],
+          width: 1,
+          type: 'solid'
+        }
+      },
+      axisLabel: {
+        textStyle: {
+          color: '#ccc'// 坐标值得具体的颜色
+        }
+      }
+    }],
+    series: []
+  }
+}
 
 @Component({
-  name: 'LineChart'
+  name: 'BarChart'
 })
 export default class extends mixins(ResizeMixin) {
   @Prop({ default: 'chart' }) private className!: string
-  @Prop({ default: 'chart' }) private id!: string
-  @Prop({ default: '200px' }) private width!: string
-  @Prop({ default: '200px' }) private height!: string
+  @Prop({ default: '100%' }) private width!: string
+  @Prop({ default: '228px' }) private height!: string
+  @Prop({ default: () => [] }) private data!:[]
+  private options:any
+
+  @Watch('data')
+  private onValueChange(value: object) {
+    this.initData()
+  }
 
   mounted() {
+    this.initData()
+  }
+
+  initData() {
+    if (this.data.length === 0) return
+    this.options = getOptions()
+
+    this.data.forEach((n:any, i) => {
+      const data:any = {
+        name: n.title,
+        data: n.data,
+        type: 'line',
+        smooth: true
+      }
+      if (n.areaStyle) {
+        data.areaStyle = {}
+      }
+      this.options.series.push(data)
+      this.options.legend.data[i] = n.title
+
+      if (n.chartX) {
+        this.options.xAxis[i].data = n.chartX
+      }
+    })
     this.$nextTick(() => {
       this.initChart()
     })
@@ -36,157 +139,8 @@ export default class extends mixins(ResizeMixin) {
   }
 
   private initChart() {
-    this.chart = echarts.init(document.getElementById(this.id) as HTMLDivElement)
-    this.chart.setOption({
-      backgroundColor: '#394056',
-      title: {
-        top: 20,
-        text: 'Requests',
-        textStyle: {
-          fontWeight: 'normal',
-          fontSize: 16,
-          color: '#F1F1F3'
-        },
-        left: '1%'
-      },
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        top: 20,
-        icon: 'rect',
-        itemWidth: 14,
-        itemHeight: 5,
-        itemGap: 13,
-        data: ['CMCC', 'CTCC', 'CUCC'],
-        right: '4%',
-        textStyle: {
-          fontSize: 12,
-          color: '#F1F1F3'
-        }
-      },
-      grid: {
-        top: 100,
-        left: '2%',
-        right: '2%',
-        bottom: '2%',
-        containLabel: true
-      },
-      xAxis: [{
-        type: 'category',
-        boundaryGap: false,
-        axisLine: {
-          lineStyle: {
-            color: '#57617B'
-          }
-        },
-        data: ['13:00', '13:05', '13:10', '13:15', '13:20', '13:25', '13:30', '13:35', '13:40', '13:45', '13:50', '13:55']
-      }],
-      yAxis: [{
-        type: 'value',
-        name: '(%)',
-        axisTick: {
-          show: false
-        },
-        axisLine: {
-          lineStyle: {
-            color: '#57617B'
-          }
-        },
-        axisLabel: {
-          margin: 10,
-          fontSize: 14
-        },
-        splitLine: {
-          lineStyle: {
-            color: '#57617B'
-          }
-        }
-      }],
-      series: [{
-        name: 'CMCC',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
-        showSymbol: false,
-        lineStyle: {
-          width: 1
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0,
-            color: 'rgba(137, 189, 27, 0.3)'
-          }, {
-            offset: 0.8,
-            color: 'rgba(137, 189, 27, 0)'
-          }], false),
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
-          shadowBlur: 10
-        },
-        itemStyle: {
-          color: 'rgb(137,189,27)',
-          borderColor: 'rgba(137,189,2,0.27)',
-          borderWidth: 12
-        },
-        data: [220, 182, 191, 134, 150, 120, 110, 125, 145, 122, 165, 122]
-      }, {
-        name: 'CTCC',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
-        showSymbol: false,
-        lineStyle: {
-          width: 1
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0,
-            color: 'rgba(0, 136, 212, 0.3)'
-          }, {
-            offset: 0.8,
-            color: 'rgba(0, 136, 212, 0)'
-          }], false),
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
-          shadowBlur: 10
-        },
-        itemStyle: {
-          color: 'rgb(0,136,212)',
-          borderColor: 'rgba(0,136,212,0.2)',
-          borderWidth: 12
-        },
-        data: [120, 110, 125, 145, 122, 165, 122, 220, 182, 191, 134, 150]
-      }, {
-        name: 'CUCC',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 5,
-        showSymbol: false,
-        lineStyle: {
-          width: 1
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0,
-            color: 'rgba(219, 50, 51, 0.3)'
-          }, {
-            offset: 0.8,
-            color: 'rgba(219, 50, 51, 0)'
-          }], false) as any,
-          shadowColor: 'rgba(0, 0, 0, 0.1)',
-          shadowBlur: 10
-        },
-        itemStyle: {
-          color: 'rgb(219,50,51)',
-          borderColor: 'rgba(219,50,51,0.2)',
-          borderWidth: 12
-        },
-        data: [220, 182, 125, 145, 122, 191, 134, 150, 120, 110, 165, 122]
-      }]
-    } as EChartOption<EChartOption.SeriesLine>)
+    this.chart = echarts.init(this.$el as HTMLDivElement, 'macarons')
+    this.chart.setOption(this.options as EChartOption<EChartOption.SeriesLine>)
   }
 }
-
 </script>

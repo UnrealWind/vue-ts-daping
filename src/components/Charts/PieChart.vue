@@ -8,7 +8,7 @@
 <script lang="ts">
 // eslint-disable-next-line
 import echarts, { EChartOption } from 'echarts'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
@@ -20,29 +20,9 @@ const dataStyle = {
       fontSize: 18
     },
     labelLine: {
-      // smooth: 0.2,
-      length: 40,
-      length2: 40
-    }
-  }
-}
-
-const labelShow = {
-  show: true,
-  color: '#fff',
-  fontSize: 15,
-  formatter: [
-    '{d| {d}% }',
-    '{b| {b} }'
-  ].join('\n'),
-  rich: {
-    d: {
-      fontSize: 15,
-      color: '#fff'
-    },
-    b: {
-      fontSize: 18,
-      color: '#fff'
+      smooth: 0.2,
+      length: 50,
+      length2: 30
     }
   }
 }
@@ -65,9 +45,9 @@ const placeHolderStyle = {
 function getOptions() {
   return {
     backgroundColor: 'transparent',
-    color: ['#fbf320', '#3dfffb', '#ffffff', '#2bcafb', '#397cfd', '#faad14'],
+    color: ['#fbf320', '#3dfffb', '#ffffff', '#2bcafb', '#397cfd', '#faad14', '#38e6e4'],
     tooltip: {
-      show: true,
+      show: false,
       formatter: '{b} <br/> {c} ({d}%)'
     },
     angleAxis: {
@@ -107,13 +87,13 @@ function getOptions() {
     },
     polar: {
       center: ['50%', '50%'],
-      radius: 110
+      radius: 95
     },
     series: [{
       name: 'Line 1',
       type: 'pie',
       clockWise: false,
-      radius: [70, 75],
+      radius: [60, 70],
       itemStyle: dataStyle,
       hoverAnimation: false,
       data: []
@@ -122,7 +102,7 @@ function getOptions() {
       name: 'Line 2',
       type: 'pie',
       clockWise: false,
-      radius: [60, 70],
+      radius: [70, 80],
       itemStyle: dataStyle,
       hoverAnimation: false,
       data: []
@@ -132,7 +112,7 @@ function getOptions() {
       type: 'pie',
       clockWise: false,
       hoverAnimation: false,
-      radius: [90, 95],
+      radius: [65, 70],
       itemStyle: dataStyle,
 
       data: []
@@ -142,7 +122,7 @@ function getOptions() {
       type: 'pie',
       clockWise: false,
       hoverAnimation: false,
-      radius: [80, 95],
+      radius: [65, 75],
       itemStyle: dataStyle,
 
       data: []
@@ -152,16 +132,18 @@ function getOptions() {
       type: 'pie',
       clockWise: false,
       hoverAnimation: false,
-      radius: [60, 70],
+      radius: [70, 80],
       itemStyle: dataStyle,
       data: []
     },
     {
-      type: 'bar',
-      data: [0],
-      coordinateSystem: 'polar',
-      name: '06a',
-      stack: 'a'
+      name: 'Line 6',
+      type: 'pie',
+      clockWise: false,
+      hoverAnimation: false,
+      radius: [65, 75],
+      itemStyle: dataStyle,
+      data: []
     }]
   }
 }
@@ -171,11 +153,20 @@ function getOptions() {
 export default class extends mixins(ResizeMixin) {
     @Prop({ default: 'chart' }) private className!: string
     @Prop({ default: '100%' }) private width!: string
-    @Prop({ default: '300px' }) private height!: string
+    @Prop({ default: '280px' }) private height!: string
     @Prop({ default: () => [] }) private data!: []
     private options:any
 
+    @Watch('data')
+    private onValueChange(value: object) {
+      this.initData()
+    }
+
     mounted() {
+      this.initData()
+    }
+
+    initData() {
       let total:number = 0
       this.options = getOptions()
       this.data.forEach((n:any, i) => {
@@ -186,7 +177,26 @@ export default class extends mixins(ResizeMixin) {
         }, {
           value: n.value,
           name: n.label,
-          label: labelShow
+          label: {
+            show: true,
+            color: '#ddd',
+            fontSize: 15,
+            formatter: [
+              '{d| {d}% }',
+              '{b| {b} }',
+              ' ' + n.count
+            ].join('\n'),
+            rich: {
+              d: {
+                fontSize: 12,
+                color: '#ccc'
+              },
+              b: {
+                fontSize: 14,
+                color: '#ccc'
+              }
+            }
+          }
         }, {
           value: 360 - (total + n.value),
           name: '',

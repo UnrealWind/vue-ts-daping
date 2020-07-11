@@ -7,7 +7,7 @@ import { UserModule } from '@/store/modules/user'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login']
+const whiteList = ['/login', '/dashboard', '/actService/index', '/dealer/index']
 
 router.beforeEach(async(to: Route, _: Route, next: any) => {
   // Start progress bar

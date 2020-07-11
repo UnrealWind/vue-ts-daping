@@ -240,7 +240,7 @@ export default class extends Vue {
 <style lang="scss" scoped>
   .dashboard-editor-container {
     position: relative;
-    background-image: url("http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/4cf50aa8e6ca597f42e08b3c0745d933.png");
+    background-image: url("../../assets/img/bg.png");
     .margin-top {
       margin-top: 37px;
       padding: 10px;

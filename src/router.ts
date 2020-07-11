@@ -25,11 +25,11 @@ export default new Router({
   },
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: '/login',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue'),
-      meta: { hidden: true }
-    },
+    // {
+    //   path: '/login',
+    //   component: () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue'),
+    //   meta: { hidden: true }
+    // },
     {
       path: '/404',
       component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
@@ -68,6 +68,7 @@ export default new Router({
     {
       path: '/dealer',
       component: Layout,
+      redirect: '/dealer',
       children: [
         {
           path: 'index',

@@ -1,115 +1,283 @@
 <template>
   <div class="dashboard-editor-container">
-    <el-select
-      v-model="type"
-      placeholder="请选择渠道"
-      clearable
-      class="filter-item fixed-select"
-      style="width: 130px"
-    >
-      <el-option
-        label="XCEC"
-        value="0"
-      />
-      <el-option
-        label="ACPL"
-        value="1"
-      />
-      <el-option
-        label="DCEC"
-        value="2"
-      />
-      <el-option
-        label="BFCEC"
-        value="3"
-      />
-      <el-option
-        label="GCIC"
-        value="4"
-      />
-    </el-select>
-    <el-date-picker
-      v-model="dateTime"
-      placeholder="选择日期"
-      class="fixed-select fixed-select-date"
-      type="month"
-    />
     <el-row>
       <div>
         <h3 class="center">
           e路康明斯用户及功能看板
         </h3>
         <h4 class="center">
-          2020-06-08 12:00:00
+          {{ currentTime |parseTime }}
         </h4>
         <div class="bg-shiny" />
       </div>
       <el-col
-        :xs="8"
-        :sm="8"
-        :lg="8"
+        :xs="6"
+        :sm="6"
+        :lg="6"
       >
-        <h3 class="padding10">
-          用户行为分析
-        </h3>
-        <div class="title-line" />
-        <div
-          class="chart-wrapper"
-          style="padding-top: 140px;"
-        >
+        <div class="bg">
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>用户总数分析
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提示文字"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <div class="chart-wrapper">
+            <shiny-pie-chart
+              :data="channelCountData.result"
+              height="280px"
+              style="position: relative;"
+            />
+            <p>
+              用户总数
+              <br>
+              <span class="yellow">{{ channelCountData.total }}
+                <img src="../../assets/img/mov-circle.png">
+              </span>
+            </p>
+          </div>
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>用户省份分布
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提示文字"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <div style="position: relative;">
+            <el-radio-group
+              v-model="top5"
+              class="fixed-top-right"
+              @change="getLocationDistribution"
+            >
+              <el-radio-button label="top5" />
+              <el-radio-button label="bottom5" />
+            </el-radio-group>
+            <bar-chart
+              :data="locationDistributionData"
+              height="300px"
+            />
+          </div>
+          <h3 class="padding10 margin-top20">
+            <span class="dark-yellow">·</span>用户月增量趋势
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提示文字"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <div
+            class="chart-wrapper"
+          >
+            <line-chart
+              :data="monthlyMemberGrowthData"
+              height="294px"
+            />
+          </div>
+        </div>
+      </el-col>
+      <el-col
+        :xs="12"
+        :sm="12"
+        :lg="12"
+      >
+        <div class="bg">
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>用户行为分析
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="数据范围：2020年1月1日至今"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
           <div class="total-count">
             <div>
-              <div>总连接量</div>
-              <div>5671</div>
+              <div>总用户数量</div>
+              <div>{{ memberNum }}</div>
             </div>
             <div>
-              <div>总活跃量</div>
-              <div>5128</div>
+              <div>月活跃数量</div>
+              <div>{{ visitingCount }}</div>
             </div>
           </div>
-          <bar-chart />
+          <div
+            class="chart-wrapper"
+          >
+            <radar-chart
+              :data="actionCountListData"
+              height="480px"
+            />
+            <div class="radar-tiem">
+              <el-row>
+                <el-col
+                  v-for="(item, index) in actionCountListData.dis"
+                  :key="index"
+                  :xs="6"
+                  :sm="6"
+                  :lg="6"
+                  class="radar-dis"
+                >
+                  <span>{{ item.name }}</span>:<span>{{ actionCountListData.data[index] }}</span><span>次</span>
+                </el-col>
+              </el-row>
+            </div>
+            <h3 class="padding10 margin-top20">
+              <span class="dark-yellow">·</span>登录时间分析
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="提示文字"
+                placement="top"
+              >
+                <el-button
+                  class="hide-btn"
+                  type="info"
+                  icon="el-icon-question"
+                />
+              </el-tooltip>
+            </h3>
+            <div class="title-line">
+              <span class="sml-circle" />
+            </div>
+            <div
+              class="chart-wrapper"
+            >
+              <line-chart
+                :data="usageDistributionData"
+                height="294px"
+              />
+            </div>
+          </div>
         </div>
       </el-col>
       <el-col
-        :xs="8"
-        :sm="8"
-        :lg="8"
+        :xs="6"
+        :sm="6"
+        :lg="6"
       >
-        <h3 class="padding10">
-          用户总数分析
-        </h3>
-        <div class="title-line" />
-        <div class="chart-wrapper">
-          <pie-chart :data="pieChartData" />
-          <p>
-            用户总数<br><span class="yellow">5172<img src="https://img.alicdn.com/tfs/TB1nXLptQvoK1RjSZFDXXXY3pXa-800-800.png"></span>
-          </p>
-        </div>
-        <div
-          class="chart-wrapper"
-          style="margin: 60px 0 40px 0;"
-        >
-          <line-chart />
-        </div>
-      </el-col>
-      <el-col
-        :xs="8"
-        :sm="8"
-        :lg="8"
-      >
-        <h3 class="padding10">
-          日活量分析
-        </h3>
-        <div class="title-line" />
-        <div class="chart-wrapper">
-          <pie-chart :data="pieChartData1" />
-          <p>日活量<br><span class="yellow">4172<img src="https://img.alicdn.com/tfs/TB1nXLptQvoK1RjSZFDXXXY3pXa-800-800.png"></span></p>
-        </div>
-        <div
-          class="chart-wrapper"
-          style="margin-top: 60px;"
-        >
-          <line-chart1 />
+        <div class="bg">
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>日活量分析
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提示文字"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <div class="chart-wrapper">
+            <shiny-pie-chart
+              :data="channelCountLastDayData.result"
+              height="280px"
+            />
+            <p>
+              用户总数
+              <br>
+              <span class="yellow">{{ channelCountLastDayData.total }}
+                <img src="../../assets/img/mov-circle.png">
+              </span>
+            </p>
+          </div>
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>用户活跃天数分析
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提示文字"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <bar-chart
+            ref="activeDays"
+            :data="activeDaysData"
+            height="300px"
+          />
+          <h3 class="padding10 margin-top20">
+            <span class="dark-yellow">·</span>日活量变化趋势
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="提示文字"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <div
+            class="chart-wrapper"
+          >
+            <line-chart
+              :data="dailyCountData"
+              height="294px"
+            />
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -119,47 +287,275 @@
 <script lang="ts">
 import 'echarts/theme/macarons.js' // Theme used in BarChart, LineChart, PieChart and RadarChart
 import { Component, Vue } from 'vue-property-decorator'
-import BarChart from './components/BarChart.vue'
-import PieChart from './components/PieChart.vue'
-import LineChart from './components/LineChart.vue'
-import LineChart1 from './components/LineChart1.vue'
+import BarChart from '../../components/Charts/BarChart.vue'
+import PieChart from '../../components/Charts/PieChart.vue'
+import LineChart from '../../components/Charts/LineChart.vue'
+import RadarChart from '../../components/Charts/RadarChart.vue'
+import ShinyPieChart from '../../components/Charts/shinyPieChart.vue'
 
-  @Component({
-    name: 'DashboardAdmin',
-    components: {
-      PieChart,
-      BarChart,
-      LineChart,
-      LineChart1
-    }
-  })
+import { getTotalCount, getActiveDaysList, getDailyCountList, getLocationDistribution, getMonthlyMemberGrowth, getUsageDistributionByHour, getChannelCountList, getChannelCountLastDay, getActionCountList } from '@/api/chart'
+
+@Component({
+  name: 'DashboardAdmin',
+  components: {
+    PieChart,
+    BarChart,
+    LineChart,
+    RadarChart,
+    ShinyPieChart
+  }
+})
+
 export default class extends Vue {
-    private type:string = ''
-    private dateTime:string =''
+    private top5:string = 'top5'
+    private memberNum:string = ''
+    private visitingCount:string = ''
+    private currentTime:object = new Date()
 
-    private pieChartData:object[] = [{ label: 'XCEC', value: 100 }, { label: 'ACPL', value: 70 }, { label: 'DCEC', value: 60 },
-      { label: 'BFCEC', value: 90 }, { label: 'GCIC', value: 40 }]
+    private channelCountData:object = {}
 
-    private pieChartData1:object[] = [{ label: 'XCEC', value: 40 }, { label: 'ACPL', value: 100 }, { label: 'DCEC', value: 90 },
-      { label: 'BFCEC', value: 60 }, { label: 'GCIC', value: 70 }]
+    private channelCountLastDayData:object[] = []
 
-    private barChartData:object[] = []
+    private locationDistributionData:object = {}
+
+    private activeDaysData:object = {}
+
+    private monthlyMemberGrowthData:object[] = []
+
+    private dailyCountData:object[] = []
+
+    private usageDistributionData:object[] = []
+
+    private actionCountListData:object = {}
+
+    mounted() {
+      setInterval(() => {
+        this.currentTime = new Date()
+      }, 1000)
+
+      this.getTotalCount()
+      this.getActiveDays()
+      this.getDailyCount()
+      this.getLocationDistribution()
+      this.getMonthlyMemberGrowth()
+      this.getUsageDistributionByHour()
+      this.getChannelCountList()
+      this.getChannelCountLastDay()
+      this.getActionCountList()
+    }
+
+    // 用户行为分析
+    private async getActionCountList() {
+      const { data } = await getActionCountList({})
+      interface tar {
+        data:number[]
+        dis:object[]
+      }
+      const target:tar = {
+        data: [],
+        dis: []
+      }
+      data.sort(this.compare('count'))
+      data.reverse()
+      data.length = 8
+
+      data.forEach((n:any, i) => {
+        target.data.push(n.count)
+        target.dis.push({
+          name: n.actionName,
+          max: data[0].count
+        })
+      })
+      this.actionCountListData = target
+    }
+
+    // 日活量分析
+    private async getChannelCountLastDay() {
+      const { data } = await getChannelCountLastDay({})
+      data.result.sort(this.compare('count'))
+      this.channelCountLastDayData = data
+    }
+
+    // 用户总数分析
+    private async getChannelCountList() {
+      const { data } = await getChannelCountList({})
+      data.result.sort(this.compare('count'))
+      this.channelCountData = data
+    }
+
+    // 总访问量/月活跃量
+    private async getTotalCount() {
+      const { data } = await getTotalCount({})
+      this.memberNum = data.memberNum
+      this.visitingCount = data.visitingCount
+    }
+
+    // 登录时间分析
+    private async getUsageDistributionByHour() {
+      const { data } = await getUsageDistributionByHour({})
+      interface callBackItem {
+        data:number[]
+        chartX:string[]
+      }
+      const target:callBackItem[] = [{
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        chartX: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+      }]
+      data.forEach((n, i) => {
+        target[0].data[Number(n.hour)] = n.count
+        target[0].chartX[Number(n.hour)] = n.hour
+      })
+
+      this.usageDistributionData = target
+    }
+
+    // 用户月增量趋势
+    private async getMonthlyMemberGrowth() {
+      const { data } = await getMonthlyMemberGrowth({})
+        interface callBackItem {
+          data:number[]
+          chartX:string[]
+        }
+        const target:callBackItem[] = [{
+          data: [],
+          chartX: []
+        }]
+        data.forEach((n, i) => {
+          for (const i in n) {
+            target[0].data.push(n[i])
+            target[0].chartX.push(i)
+          }
+        })
+
+        this.monthlyMemberGrowthData = target
+    }
+
+    // 日活量变化趋势
+    private async getDailyCount() {
+      const { data } = await getDailyCountList({})
+      interface callBackItem {
+        data:number[]
+        chartX:string[]
+      }
+      const target:callBackItem[] = [{
+        data: [],
+        chartX: []
+      }]
+      data.forEach((n, i) => {
+        target[0].data.push(n.DailyCount)
+        target[0].chartX.push(n.Days)
+      })
+
+      this.dailyCountData = target
+    }
+
+    // 用户活跃天数分析
+    private async getActiveDays() {
+      const { data } = await getActiveDaysList({})
+      interface callBackItem {
+        data:number[]
+        chartX:number[]
+      }
+      const target:callBackItem = {
+        data: [],
+        chartX: []
+      }
+      data.forEach((n, i) => {
+        target.data.push(n.count)
+        target.chartX.push(n.activeDays)
+      })
+
+      this.activeDaysData = target
+    }
+
+    // 用户省份分布
+    private async getLocationDistribution() {
+      let type:number
+      this.top5 === 'top5' ? type = 1 : type = 2
+      const { data } = await getLocationDistribution({ params: { type: type } })
+      interface callBackItem {
+        data:number[]
+        chartY:number[]
+      }
+      const target:callBackItem = {
+        data: [],
+        chartY: []
+      }
+
+      data.sort(this.compare('count'))
+      data.forEach((n, i) => {
+        target.data.push(n.count)
+        target.chartY.push(n.province)
+      })
+
+      this.locationDistributionData = target
+    }
+
+    private compare(property) {
+      return function(obj1, obj2) {
+        const value1 = obj1[property]
+        const value2 = obj2[property]
+        return value1 - value2 // 升序
+      }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
   .dashboard-editor-container {
     position: relative;
-    background-image: url("http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/4cf50aa8e6ca597f42e08b3c0745d933.png");
+    background-image: url("../../assets/img/bg.png");
     .fixed-select ::v-deep input {
       background: #2d3a4b;
       color:#ffffff;
+    }
+    .hide-btn {
+      height: 0;
+      padding: 0;
+      float: right;
+      background-color: rgba(0, 16, 52, 0);
+      border: 0;
+      position: relative;
+      top: 3px;
+    }
+    .bg {
+      background-color: rgba(0, 16, 52, 0.6);
+      margin:5px;
+      padding: 10px 0 0 0;
+    }
+    .dark-yellow {
+      color: #faad14;
+      font-size:18px;
     }
     .fixed-select {
       position: absolute;
       right: 300px;
       top:20px;
       z-index: 999999;
+    }
+    .fixed-top-right {
+      position: absolute;
+      right:6px;
+      top:3px;
+      z-index:100;
+      ::v-deep span {
+        padding: 3px 6px;
+        font-size: 12px;
+        display: inline-block;
+        width: 70px;
+      }
+      ::v-deep .el-radio-button__inner{
+        background: rgba(255,255,255,0.8);
+      }
+      ::v-deep .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+        background: #1890ff;
+      }
+      ::v-deep .el-radio-button:last-child .el-radio-button__inner{
+        border-radius: 0 8px 8px 0;
+      }
+      ::v-deep .el-radio-button:first-child .el-radio-button__inner{
+        border-radius:  8px 0 0 8px;
+      }
     }
     .fixed-select-date {
       right: 60px;
@@ -171,15 +567,33 @@ export default class extends Vue {
       margin-top: 40px;
       padding: 10px;
     }
+    .radar-dis {
+      margin-top: 7px;
+      color: #fff;
+      font-size: 14px;
+      padding: 5px 0 0px 20px;
+      span:first-child{
+        padding: 0 5px;
+      }
+      span:nth-child(2){
+        color: #faad14;
+        padding: 0 5px;
+        font-size: 16px;
+      }
+      span:nth-child(3){
+        font-size: 12px;
+      }
+    }
     .padding10 {
       padding:0 10px 10px 10px;
       margin-top: 0;
+      font-size:17px;
     }
     .center{
       text-align: center;
     }
-    .margin-top30 {
-      margin-top: 30px;
+    .margin-top20 {
+      margin-top: 20px;
     }
     .point {
       color: yellow;
@@ -189,11 +603,18 @@ export default class extends Vue {
       font-weight: 900;
       margin-right: 5px;
     }
-    .anchorBL{
-      display:none;
+    .sml-circle {
+      position: relative;
+      top:-9px;
+      float: left;
+      display: inline-block;
+      height: 20px;
+      width: 20px;
+      background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;
+      background-image: url("../../assets/img/rol-circle.png");
     }
     h3.center {
-      background-image: url('http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/d06a96e82958d368db355d1a137eed2a.png');
+      background-image: url('../../assets/img/title.png');
       background-size: 100% 100%;
       height: 50px;
       font-size: 28px;
@@ -210,38 +631,23 @@ export default class extends Vue {
       color:#ccc;
     }
     .title-line {
-      background-image: url("http://datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/86312663657fba11927232db79833d7e.png");
+      background-image: url("../../assets/img/sml-title.png");
       background-size: 100% 100%;
       width: 100%;
       height: 3px;
     }
     .bg-shiny {
-      background-image: url('https://img.alicdn.com/tps/TB1Z8MHPFXXXXacaXXXXXXXXXXX-500-54.gif');
+      background-image: url('../../assets/img/shiny.gif');
       background-size: 100% 100%;
       height: 16px;
       width: 144px;
       margin:0 auto;
     }
-    .bottom-part {
-      margin-top: 10px;
-      .el-col {
-        padding: 0 10px;
-        >div{
-          background-color:rgba(0,16,52,0.8);
-          padding: 5px 0 0 0;
-          h5 {
-            padding: 0 0 7px 0;
-          }
-        }
-      }
-    }
-    .left-part,.right-part {
-      padding: 0 10px;
-    }
     .total-count{
-      width:250px;
+      width:340px;
+      margin:0 auto;
       >div{
-        width: 100px;
+        width: 150px;
         text-align: center;
         display: inline-block;
         div{
@@ -258,9 +664,6 @@ export default class extends Vue {
       >div:nth-child(2){
         margin-left: 30px;
       }
-      position: absolute;
-      top:20px;
-      left:30%;
       z-index:999;
     }
     .chart-wrapper {
@@ -271,21 +674,23 @@ export default class extends Vue {
         z-index: 999;
         text-align: center;
         width: 100%;
-        top:120px;
+        top:105px;
         .yellow {
           position: relative;
           color:#faad14;
           font-size: 20px;
+          display: inline-block;
+          width: 100px;
         }
       }
       img {
-        z-index: 998;
+        z-index: -1;
         height: 120px;
         width: 120px;
         position: absolute;
         margin:0 auto;
-        top: -62px;
-        left: -38px;
+        top: -61px;
+        left: -11px;
       }
     }
     h3,h4,h5 {
