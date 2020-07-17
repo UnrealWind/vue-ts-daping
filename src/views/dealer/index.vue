@@ -3,6 +3,7 @@
     <el-radio-group
       v-model="dealer"
       class="fixed-top-right"
+      @change="changeDealer"
     >
       <el-radio-button label="经销商" />
       <el-radio-button label="发展中经销商" />
@@ -18,9 +19,9 @@
         <div class="bg-shiny" />
       </div>
       <el-col
-        :xs="16"
-        :sm="16"
-        :lg="16"
+        :xs="14"
+        :sm="14"
+        :lg="14"
       >
         <div class="bg">
           <div class="total-count">
@@ -36,7 +37,10 @@
           <div
             class="chart-wrapper"
           >
-            <map-chart height="600px" />
+            <map-chart
+              height="600px"
+              :data="dealerListData"
+            />
             <div class="bg">
               <h3 class="padding10 margin-top20">
                 <span class="dark-yellow">·</span>各省经销商数量分析
@@ -60,8 +64,8 @@
             <div
               class="chart-wrapper"
             >
-              <bar-chart
-                :data="barChartData"
+              <tree-bar-chart
+                :data="countListByProvinceData"
                 height="306px"
               />
             </div>
@@ -69,9 +73,9 @@
         </div>
       </el-col>
       <el-col
-        :xs="8"
-        :sm="8"
-        :lg="8"
+        :xs="10"
+        :sm="10"
+        :lg="10"
       >
         <div class="bg">
           <el-row>
@@ -100,7 +104,7 @@
               </div>
               <div class="chart-wrapper">
                 <act-pie-chart
-                  :data="pieChartData"
+                  :data="countListByGradedStatusData"
                   height="180px"
                 />
               </div>
@@ -130,7 +134,7 @@
               </div>
               <div class="chart-wrapper">
                 <act-pie-chart
-                  :data="pieChartData1"
+                  :data="countListByIndustrialMarketStatus"
                   height="180px"
                 />
               </div>
@@ -160,7 +164,7 @@
               </div>
               <div class="chart-wrapper">
                 <act-pie-chart
-                  :data="pieChartData2"
+                  :data="countListByAuthLevelData"
                   height="180px"
                 />
               </div>
@@ -190,7 +194,7 @@
               </div>
               <div class="chart-wrapper">
                 <act-pie-chart
-                  :data="pieChartData3"
+                  :data="countListByEmissionLevelData"
                   height="180px"
                 />
               </div>
@@ -220,7 +224,7 @@
               </div>
               <div class="chart-wrapper">
                 <dub-bar-chart
-                  :data="barChartData1"
+                  :data="countListByAuthModelData"
                   height="180px"
                 />
               </div>
@@ -250,7 +254,7 @@
               </div>
               <div class="chart-wrapper">
                 <dub-bar-chart
-                  :data="barChartData2"
+                  :data="countListByMainframeCompanyNameData"
                   height="180px"
                 />
               </div>
@@ -301,6 +305,9 @@ import LineChart from '../../components/Charts/LineChart.vue'
 import mapChart from '../../components/Charts/mapChart.vue'
 import actPieChart from '../../components/Charts/ActPieChart.vue'
 import dubBarChart from '../../components/Charts/DubBarChart.vue'
+import treeBarChart from '../../components/Charts/treeBarChart.vue'
+
+import { getCountListByAuthLevel, getCountListByEmissionLevel, getCountListByGradedStatus, getCountListByMainframeCompanyName, getCountListByAuthModel, getCountListByIndustrialMarketStatus, getCountListByProvince, getDealerList } from '@/api/chart'
 
   @Component({
     name: 'DashboardAdmin',
@@ -310,41 +317,44 @@ import dubBarChart from '../../components/Charts/DubBarChart.vue'
       LineChart,
       mapChart,
       actPieChart,
-      dubBarChart
+      dubBarChart,
+      treeBarChart
     }
   })
 
 export default class extends Vue {
     private dealer:string = '经销商'
     private currentTime:object = new Date()
-    private pieChartData:object[] = [{ name: '一般站', value: 110 }, { name: '重点站', value: 110 }, { name: '精英站', value: 60 },
-      { name: '其他站', value: 80 }]
 
-    private pieChartData1:object[] = [{ name: '一般站', value: 90 }, { name: '重点站', value: 160 }, { name: '精英站', value: 80 },
-      { name: '其他站', value: 30 }]
+    private dealerListData:any = {}
+    private dealerListDataPartNow:any = {}
+    private dealerListDataPartDes:any = {}
 
-    private pieChartData2:object[] = [{ name: '燃油服务', value: 80 }, { name: '区域服务站', value: 110 }, { name: 'HMLD快修级', value: 60 },
-      { name: 'HMLD保养级', value: 110 }]
+    private countListByGradedStatusData:object[] = []
 
-    private pieChartData3:object[] = [{ name: '国三', value: 80 }, { name: '国四', value: 55 }, { name: '国五', value: 55 }, { name: '四阶段', value: 110 }, { name: '三阶段', value: 60 }]
+    private countListByIndustrialMarketStatus:object[] = []
 
-    private barChartData:object = {
-      data: [1823, 2389, 2904, 4970, 6230, 1823, 2389, 2904, 4970, 6230, 1823, 2389],
-      chartX: ['河北', '河南', '湖北', '陕西', '北京', '上海', '深圳', '合肥', '山东', '成都', '杭州', '长沙'],
-      barWidth: 30,
-      barColor: '#65f5f3'
+    private countListByAuthLevelData:object[] = []
+
+    private countListByEmissionLevelData:object[] = []
+
+    private countListByProvinceData:object = {
+      data: [],
+      xKeys: [],
+      splitIndex: [],
+      xGroup: []
     }
 
-    private barChartData1:object = {
-      grade: ['ISF2.8', 'ISG11', 'ISD4.5', 'QSX15', 'ISB5.9'],
-      cost: [40, 30, 40, 50, 70, 50, 40],
-      totalCost: [100, 100, 100, 100, 100, 100, 100]
+    private countListByAuthModelData:object = {
+      grade: [],
+      cost: [],
+      totalCost: []
     }
 
-    private barChartData2:object = {
-      grade: ['安徽江淮', '中国重汽', '三一集团', '河南开封', '江铃汽车'],
-      cost: [60, 30, 40, 50, 30, 70, 50],
-      totalCost: [100, 100, 100, 100, 100, 100, 100]
+    private countListByMainframeCompanyNameData:object = {
+      grade: [],
+      cost: [],
+      totalCost: []
     }
 
     private lineChartData:object[] = [{
@@ -362,13 +372,203 @@ export default class extends Vue {
       title: '中区'
     }]
 
-    mounted() {
+    async mounted() {
       setInterval(() => {
         this.dealer === '经销商' ? this.dealer = '发展中经销商' : this.dealer = '经销商'
+        this.changeDealer()
       }, 15000)
-      setInterval(() => {
+
+      this.getCountListByAuthLevel()
+      this.getCountListByEmissionLevel()
+      this.getCountListByGradedStatus()
+      this.getCountListByMainframeCompanyName()
+      this.getCountListByAuthModel()
+      this.getCountListByIndustrialMarketStatus()
+      this.getCountListByProvince()
+      await this.getDealerList(1)
+      await this.getDealerList(2)
+      await this.changeDealer()
+      setInterval(async() => {
         this.currentTime = new Date()
+        // 初始化
+        if (new Date().getMinutes() === 15 && new Date().getSeconds() === 0) {
+          // 一小时更新一次
+
+          if (new Date().getHours() === 16) {
+            // 一天更新一次
+            this.getCountListByAuthLevel()
+            this.getCountListByEmissionLevel()
+            this.getCountListByGradedStatus()
+            this.getCountListByMainframeCompanyName()
+            this.getCountListByAuthModel()
+            this.getCountListByIndustrialMarketStatus()
+            this.getCountListByProvince()
+            await this.getDealerList(1)
+            await this.getDealerList(2)
+            await this.changeDealer()
+          }
+        }
       }, 1000)
+    }
+
+    private async changeDealer() {
+      if (this.dealer === '经销商') {
+        this.dealerListData = JSON.parse(JSON.stringify(this.dealerListDataPartNow))
+      } else {
+        this.dealerListData = JSON.parse(JSON.stringify(this.dealerListDataPartNow))
+        this.dealerListData.dataDes = JSON.parse(JSON.stringify(this.dealerListDataPartDes.data))
+        this.dealerListData.geoCoordMapDes = JSON.parse(JSON.stringify(this.dealerListDataPartDes.geoCoordMap))
+      }
+    }
+
+    // 地图
+    private async getDealerList(type) {
+      const { data } = await getDealerList({ params: { type: type } })
+
+      interface tar {
+        data:object[]
+        geoCoordMap:object
+      }
+      const target:tar = {
+        data: [],
+        geoCoordMap: {}
+      }
+
+      data.list.forEach((n:any, i) => {
+        target.data.push({ name: n.clientName, value: 1 })
+        target.geoCoordMap[n.clientName] = [n.geoLo, n.geoLa]
+      })
+      type === 1 ? this.dealerListDataPartNow = target : this.dealerListDataPartDes = target
+    }
+
+    // 授权级别
+    private async getCountListByAuthLevel() {
+      const { data } = await getCountListByAuthLevel({ params: { type: 1 } })
+      data.forEach((n:any, i) => {
+        n.name = n.entity
+        n.value = n.count
+      })
+      this.countListByAuthLevelData = data
+    }
+
+    // 排放等级
+    private async getCountListByEmissionLevel() {
+      const { data } = await getCountListByEmissionLevel({ params: { type: 1 } })
+      data.forEach((n:any, i) => {
+        n.name = n.entity
+        n.value = n.count
+      })
+      this.countListByEmissionLevelData = data
+    }
+
+    // 车用市场
+    private async getCountListByGradedStatus() {
+      const { data } = await getCountListByGradedStatus({ params: { type: 1 } })
+      data.forEach((n:any, i) => {
+        n.name = n.entity
+        n.value = n.count
+      })
+      this.countListByGradedStatusData = data
+    }
+
+    // 工业市场
+    private async getCountListByIndustrialMarketStatus() {
+      const { data } = await getCountListByIndustrialMarketStatus({ params: { type: 1 } })
+      data.forEach((n:any, i) => {
+        n.name = n.entity
+        n.value = n.count
+      })
+      this.countListByIndustrialMarketStatus = data
+    }
+
+    // 授权机型
+    private async getCountListByAuthModel() {
+      const { data } = await getCountListByAuthModel({ params: { type: 1 } })
+      interface tar {
+        grade:string[]
+        cost: number[]
+        totalCost:number[]
+        titleWidth:string
+      }
+      const target:tar = {
+        grade: [],
+        cost: [],
+        totalCost: [],
+        titleWidth: '150'
+      }
+      data.sort(this.compare('count'))
+      data.length = 5
+      data.forEach((n:any, i) => {
+        target.grade.unshift(n.entity)
+        target.cost.unshift(n.count)
+        target.totalCost.unshift(data[0].count)
+      })
+      this.countListByAuthModelData = target
+    }
+
+    // 主机厂
+    private async getCountListByMainframeCompanyName() {
+      const { data } = await getCountListByMainframeCompanyName({ params: { type: 1 } })
+      interface tar {
+        grade:string[]
+        cost: number[]
+        totalCost:number[]
+        titleWidth:string
+      }
+      const target:tar = {
+        grade: [],
+        cost: [],
+        totalCost: [],
+        titleWidth: '180'
+      }
+      data.sort(this.compare('count'))
+      data.length = 5
+      data.forEach((n:any, i) => {
+        target.grade.unshift(n.entity)
+        target.cost.unshift(n.count)
+        target.totalCost.unshift(data[0].count)
+      })
+      this.countListByMainframeCompanyNameData = target
+    }
+
+    // 各大区经销商利用率
+    private async getCountListByProvince() {
+      const { data } = await getCountListByProvince({ params: { type: 1 } })
+
+      interface tar {
+        data: object[]
+        xKeys: string[]
+        splitIndex: number[]
+        xGroup:string[]
+      }
+      const target:tar = {
+        data: [],
+        xKeys: [],
+        splitIndex: [],
+        xGroup: []
+      }
+      let total = 0
+      data.forEach((n:any, i) => {
+        total += n.regionList.length
+        target.splitIndex.push(total)
+        n.regionList.forEach((ni:any, ii) => {
+          target.xKeys.push(ni.entity)
+          target.data.push({
+            value: ni.count,
+            label: ni.entity
+          })
+          ii === Math.round(n.regionList.length / 2) ? target.xGroup.push(n.region) : target.xGroup.push('')
+        })
+      })
+      this.countListByProvinceData = target
+    }
+
+    private compare(property) {
+      return function(obj1, obj2) {
+        const value1 = obj1[property]
+        const value2 = obj2[property]
+        return value2 - value1 // 降序
+      }
     }
 }
 </script>
@@ -397,8 +597,8 @@ export default class extends Vue {
     }
     .fixed-top-right {
       position: absolute;
-      right: 60px;
-      top:18px;
+      left: 20px;
+      top:50px;
       z-index: 999;
       ::v-deep span {
         padding: 6px 12px;

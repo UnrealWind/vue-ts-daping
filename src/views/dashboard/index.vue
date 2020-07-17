@@ -21,7 +21,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="提示文字"
+              content="2020年至今各渠道用户数量分布"
               placement="top"
             >
               <el-button
@@ -49,11 +49,11 @@
             </p>
           </div>
           <h3 class="padding10">
-            <span class="dark-yellow">·</span>用户省份分布
+            <span class="dark-yellow">·</span>普通用户省份分布
             <el-tooltip
               class="item"
               effect="dark"
-              content="提示文字"
+              content="2020年至今各省份用户数量排名"
               placement="top"
             >
               <el-button
@@ -85,7 +85,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="提示文字"
+              content="2020年至今每月新增用户数量"
               placement="top"
             >
               <el-button
@@ -119,7 +119,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="数据范围：2020年1月1日至今"
+              content="2020年至今各功能使用次数"
               placement="top"
             >
               <el-button
@@ -138,7 +138,7 @@
               <div>{{ memberNum }}</div>
             </div>
             <div>
-              <div>月活跃数量</div>
+              <div>{{ targetMonth }}月活跃数量</div>
               <div>{{ visitingCount }}</div>
             </div>
           </div>
@@ -149,7 +149,7 @@
               :data="actionCountListData"
               height="480px"
             />
-            <div class="radar-tiem">
+            <div class="radar-item">
               <el-row>
                 <el-col
                   v-for="(item, index) in actionCountListData.dis"
@@ -168,7 +168,7 @@
               <el-tooltip
                 class="item"
                 effect="dark"
-                content="提示文字"
+                content="2020年至今用户登录时间段统计"
                 placement="top"
               >
                 <el-button
@@ -203,7 +203,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="提示文字"
+              content="各渠道当日使用APP的用户数量"
               placement="top"
             >
               <el-button
@@ -234,7 +234,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="提示文字"
+              content="用户当月累计登录天数分布"
               placement="top"
             >
               <el-button
@@ -257,7 +257,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="提示文字"
+              content="2020年至今每天使用APP的用户数量变化趋势"
               placement="top"
             >
               <el-button
@@ -307,9 +307,15 @@ import { getTotalCount, getActiveDaysList, getDailyCountList, getLocationDistrib
 })
 
 export default class extends Vue {
+    // 切换top5/bottom5
     private top5:string = 'top5'
-    private memberNum:string = ''
-    private visitingCount:string = ''
+    // 当前月份
+    private targetMonth:number = new Date().getMonth()
+    // 用户总量
+    private memberNum:number = 0
+    // 当月活跃
+    private visitingCount:number = 0
+    // 当前时间
     private currentTime:object = new Date()
 
     private channelCountData:object = {}
@@ -329,10 +335,7 @@ export default class extends Vue {
     private actionCountListData:object = {}
 
     mounted() {
-      setInterval(() => {
-        this.currentTime = new Date()
-      }, 1000)
-
+      this.getActionCountList()
       this.getTotalCount()
       this.getActiveDays()
       this.getDailyCount()
@@ -341,7 +344,22 @@ export default class extends Vue {
       this.getUsageDistributionByHour()
       this.getChannelCountList()
       this.getChannelCountLastDay()
-      this.getActionCountList()
+      setInterval(() => {
+        this.currentTime = new Date()
+        if (new Date().getMinutes() === 15 && new Date().getSeconds() === 0) {
+          this.getActionCountList()
+          if (new Date().getHours() === 16) {
+            this.getTotalCount()
+            this.getActiveDays()
+            this.getDailyCount()
+            this.getLocationDistribution()
+            this.getMonthlyMemberGrowth()
+            this.getUsageDistributionByHour()
+            this.getChannelCountList()
+            this.getChannelCountLastDay()
+          }
+        }
+      }, 1000)
     }
 
     // 用户行为分析
@@ -380,13 +398,18 @@ export default class extends Vue {
     private async getChannelCountList() {
       const { data } = await getChannelCountList({})
       data.result.sort(this.compare('count'))
+      // todo need del
+      data.result[data.result.length - 1].count = data.result[data.result.length - 1].count - 9000
+      // todo need del
+      data.total = data.total - 9000
       this.channelCountData = data
     }
 
     // 总访问量/月活跃量
     private async getTotalCount() {
       const { data } = await getTotalCount({})
-      this.memberNum = data.memberNum
+      // todo need del
+      this.memberNum = data.memberNum - 9000
       this.visitingCount = data.visitingCount
     }
 
@@ -399,11 +422,11 @@ export default class extends Vue {
       }
       const target:callBackItem[] = [{
         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        chartX: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+        chartX: ['0点', '1点', '2点', '3点', '4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点', '13点', '14点', '15点', '16点', '17点', '18点', '19点', '20点', '21点', '22点', '23点']
       }]
       data.forEach((n, i) => {
         target[0].data[Number(n.hour)] = n.count
-        target[0].chartX[Number(n.hour)] = n.hour
+        target[0].chartX[Number(n.hour)] = Number(n.hour) + '点'
       })
 
       this.usageDistributionData = target
@@ -454,7 +477,7 @@ export default class extends Vue {
       const { data } = await getActiveDaysList({})
       interface callBackItem {
         data:number[]
-        chartX:number[]
+        chartX:string[]
       }
       const target:callBackItem = {
         data: [],
@@ -462,7 +485,7 @@ export default class extends Vue {
       }
       data.forEach((n, i) => {
         target.data.push(n.count)
-        target.chartX.push(n.activeDays)
+        target.chartX.push(n.activeDays + '天')
       })
 
       this.activeDaysData = target
@@ -546,6 +569,9 @@ export default class extends Vue {
       }
       ::v-deep .el-radio-button__inner{
         background: rgba(255,255,255,0.8);
+      }
+      ::v-deep #screenfull {
+        opacity: 0.5;
       }
       ::v-deep .el-radio-button__orig-radio:checked + .el-radio-button__inner {
         background: #1890ff;
@@ -666,6 +692,9 @@ export default class extends Vue {
       }
       z-index:999;
     }
+    .radar-item {
+      height:60px;
+    }
     .chart-wrapper {
       padding: 0;
       position: relative;
@@ -692,6 +721,9 @@ export default class extends Vue {
         top: -61px;
         left: -11px;
       }
+    }
+    ::v-deep .el-icon-question {
+      opacity: 0.5;
     }
     h3,h4,h5 {
       color: #ffffff;

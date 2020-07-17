@@ -8,7 +8,7 @@
 <script lang="ts">
 // eslint-disable-next-line
 import echarts, { EChartOption } from 'echarts'
-import { Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
@@ -95,6 +95,7 @@ interface barChartData {
   grade: string[]
   cost: number[]
   totalCost: number[]
+  titleWidth:string
 }
 
 @Component({
@@ -107,11 +108,13 @@ export default class extends mixins(ResizeMixin) {
   @Prop({ default: () => {} }) private data!: barChartData
   private options:any
 
+  @Watch('data')
+  private onValueChange(value: object) {
+    this.initData()
+  }
+
   mounted() {
     this.initData()
-    this.$nextTick(() => {
-      this.initChart()
-    })
   }
 
   initData() {
@@ -119,6 +122,10 @@ export default class extends mixins(ResizeMixin) {
     this.options.yAxis.data = this.data.grade
     this.options.series[1].data = this.data.cost
     this.options.series[0].data = this.data.totalCost
+    if (this.data.titleWidth) this.options.grid.left = this.data.titleWidth
+    this.$nextTick(() => {
+      this.initChart()
+    })
   }
 
   beforeDestroy() {
