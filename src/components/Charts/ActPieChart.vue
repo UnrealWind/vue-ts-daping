@@ -92,7 +92,11 @@ export default class extends mixins(ResizeMixin) {
 
     const targetChart:any = this.chart
 
+    let hoverIdx:number = 0
+
     this.chart.on('mouseover', function(params) {
+      console.log(params.dataIndex)
+      hoverIdx = params.dataIndex
       if (params.dataIndex !== charPie3currentIndex) {
         targetChart.dispatchAction({
           type: 'downplay',
@@ -104,10 +108,16 @@ export default class extends mixins(ResizeMixin) {
     setInterval(() => {
       const dataLen = this.options.series[0].data.length
       // 取消之前高亮的图形
+      // 逻辑修改为，当进行自动切换操作时，会隐藏hover的块
       targetChart.dispatchAction({
         type: 'downplay',
         seriesIndex: 0,
         dataIndex: charPie3currentIndex
+      })
+      targetChart.dispatchAction({
+        type: 'downplay',
+        seriesIndex: 0,
+        dataIndex: hoverIdx
       })
       charPie3currentIndex = (charPie3currentIndex + 1) % dataLen
       // 高亮当前图形

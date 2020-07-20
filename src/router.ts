@@ -66,6 +66,21 @@ export default new Router({
       ]
     },
     {
+      path: '/performance',
+      component: Layout,
+      redirect: '/performance',
+      children: [
+        {
+          path: 'index',
+          component: () => import(/* webpackChunkName: "form" */ '@/views/performance/index.vue'),
+          meta: {
+            title: '服务表现和现场服务',
+            icon: 'form'
+          }
+        }
+      ]
+    },
+    {
       path: '/dealer',
       component: Layout,
       redirect: '/dealer',

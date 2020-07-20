@@ -14,7 +14,7 @@
           <div class="title-line" />
           <div
             class="chart-wrapper"
-            style="background-color:rgba(0,16,52,0.8);height:450px;overflow: hidden"
+            style="background-color:rgba(0,16,52,0.8);height:600px;overflow: hidden"
           >
             <el-row>
               <h5><span class="point">·</span>连接量</h5>
@@ -76,7 +76,7 @@
               <div>5128</div>
             </div>
           </div>
-          <map-chart />
+          <map-chart height="600px"/>
         </div>
       </el-col>
       <el-col
@@ -92,7 +92,7 @@
           <div class="title-line" />
           <div
             class="chart-wrapper"
-            style="background-color:rgba(0,16,52,0.8);height:450px;overflow: hidden"
+            style="background-color:rgba(0,16,52,0.8);height:600px;overflow: hidden"
           >
             <el-row>
               <h5><span class="point">·</span>故障统计</h5>

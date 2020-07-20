@@ -37,7 +37,7 @@
           <div class="chart-wrapper">
             <shiny-pie-chart
               :data="channelCountData.result"
-              height="280px"
+              height="266px"
               style="position: relative;"
             />
             <p>
@@ -147,7 +147,7 @@
           >
             <radar-chart
               :data="actionCountListData"
-              height="480px"
+              height="467px"
             />
             <div class="radar-item">
               <el-row>
@@ -219,7 +219,7 @@
           <div class="chart-wrapper">
             <shiny-pie-chart
               :data="channelCountLastDayData.result"
-              height="280px"
+              height="266px"
             />
             <p>
               用户总数
@@ -718,8 +718,8 @@ export default class extends Vue {
         width: 120px;
         position: absolute;
         margin:0 auto;
-        top: -61px;
-        left: -11px;
+        top: -65px;
+        left: -9px;
       }
     }
     ::v-deep .el-icon-question {

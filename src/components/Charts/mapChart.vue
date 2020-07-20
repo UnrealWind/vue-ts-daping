@@ -191,7 +191,7 @@ function getOptions() {
           value: 2
         },
         symbolSize: function(val:any) {
-          return val[2] * 2
+          return val[2] * 5
         },
         label: {
           formatter: '{b}',
@@ -215,14 +215,14 @@ function getOptions() {
           value: 2
         },
         symbolSize: function(val:any) {
-          return val[2] * 2
+          return val[2] * 5
         },
         label: {
           formatter: '{b}',
           position: 'right'
         },
         itemStyle: {
-          color: 'red'
+          color: 'rgba(229, 159, 159, 1) '
         },
         emphasis: {
           label: {

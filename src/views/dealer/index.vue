@@ -47,7 +47,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今各大区各省份经销商数量"
                   placement="top"
                 >
                   <el-button
@@ -89,7 +89,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今车用市场精英/重点/一般站的数量展示"
                   placement="top"
                 >
                   <el-button
@@ -119,7 +119,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今工业市场精英/重点/一般站的数量展示"
                   placement="top"
                 >
                   <el-button
@@ -149,7 +149,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今不同授权级别经销商数量占比"
                   placement="top"
                 >
                   <el-button
@@ -179,7 +179,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今不同排放等级经销商数量占比"
                   placement="top"
                 >
                   <el-button
@@ -209,7 +209,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今不同授权机型经销商数量Top5"
                   placement="top"
                 >
                   <el-button
@@ -239,7 +239,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今不同主机厂的经销商数量"
                   placement="top"
                 >
                   <el-button
@@ -269,7 +269,7 @@
                 <el-tooltip
                   class="item"
                   effect="dark"
-                  content="提示文字"
+                  content="2020年至今全国各区域经销商利用率"
                   placement="top"
                 >
                   <el-button
@@ -367,7 +367,7 @@ export default class extends Vue {
       areaStyle: {},
       title: '南区'
     }, {
-      data: [0.821, 0.851, 0.871, 0.841, 0.891, 0.831],
+      data: [0.0821, 0.851, 0.871, 0.841, 0.891, 0.831],
       areaStyle: {},
       title: '中区'
     }]

@@ -111,7 +111,7 @@ const options = {
 export default class extends mixins(ResizeMixin) {
   @Prop({ default: 'chart' }) private className!: string
   @Prop({ default: '100%' }) private width!: string
-  @Prop({ default: '279px' }) private height!: string
+  @Prop({ default: '345px' }) private height!: string
 
   mounted() {
     this.$nextTick(() => {
