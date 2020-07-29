@@ -376,15 +376,9 @@ export default class extends Vue {
     private salesRateData:any = {}
     private serviceRateData:any = {}
 
-    private gaugeChartData45D:any = {
-      data: [{ value: 0, name: '分公司LT 45天完成率' }],
-      name: '分公司LT 45天完成率'
-    }
+    private gaugeChartData45D:any = {}
 
-    private gaugeChartData30D:any = {
-      data: [{ value: 0, name: 'CSH LT 30天完成率' }],
-      name: 'CSH LT 30天完成率'
-    }
+    private gaugeChartData30D:any = {}
 
     private abandonRateData:object[] = []
     private caseQtyData:any = [{
@@ -608,8 +602,20 @@ export default class extends Vue {
       const { data } = await getWarrantyRate({ params: { channel: this.channel } })
       this.warrantyRateData = data
       data.forEach((n, i) => {
-        if (n.name === '45D') this.gaugeChartData45D.data[0].value = n.rate
-        if (n.name === '30D') this.gaugeChartData30D.data[0].value = n.rate
+        const num:number = Number(n.rate) * 100
+        if (n.name === '45D') {
+          this.gaugeChartData45D = {
+            data: [{ value: num.toFixed(2), name: '分公司LT 45天完成率' }],
+            name: '分公司LT 45天完成率'
+          }
+        }
+
+        if (n.name === '30D') {
+          this.gaugeChartData30D = {
+            data: [{ value: num.toFixed(2), name: 'CSH LT 30天完成率' }],
+            name: 'CSH LT 30天完成率'
+          }
+        }
       })
     }
 

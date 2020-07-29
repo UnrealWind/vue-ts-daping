@@ -116,7 +116,6 @@ export default class extends mixins(ResizeMixin) {
     this.options = getOptions()
     this.options.series[0].data = this.data.data
     this.options.series[0].name = this.data.name
-
     this.$nextTick(() => {
       this.initChart()
     })
