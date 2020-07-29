@@ -11,79 +11,81 @@
         <div class="bg-shiny" />
       </div>
       <el-col
-        :xs="10"
-        :sm="10"
-        :lg="10"
+        :xs="8"
+        :sm="8"
+        :lg="8"
       >
         <div class="bg">
-          <div
-            class="chart-wrapper"
-          >
-            <div class="">
-              <h3 class="padding10">
-                <span class="dark-yellow">·</span>经销商利用率
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="tips"
-                  placement="top"
-                >
-                  <el-button
-                    class="hide-btn"
-                    type="info"
-                    icon="el-icon-question"
-                  />
-                </el-tooltip>
-              </h3>
-            </div>
-            <div class="title-line">
-              <span class="sml-circle" />
-            </div>
-            <div
-              class="chart-wrapper rate"
+          <div class="">
+            <h3
+              class="padding10"
+              style="position: relative;"
             >
-              <el-row>
-                <el-col
-                  :xs="8"
-                  :sm="8"
-                  :lg="8"
-                >
-                  <div class="light-blue">
-                    <p>综合利用率</p>
-                    <span><i>78.6</i>%</span>
-                  </div>
-                </el-col>
-                <el-col
-                  :xs="8"
-                  :sm="8"
-                  :lg="8"
-                >
-                  <div class="blue">
-                    <p>服务利用率</p>
-                    <span><i>86.3</i>%</span>
-                  </div>
-                </el-col>
-                <el-col
-                  :xs="8"
-                  :sm="8"
-                  :lg="8"
-                >
-                  <div class="yellow">
-                    <p>
-                      销售利用率
-                    </p>
-                    <span><i>74.6</i>%</span>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
+              <span class="dark-yellow">·</span>Customer
+              <el-select
+                v-model="channel"
+                placeholder="请选择"
+                class="fixed-select-right"
+                @change="init"
+              >
+                <el-option
+                  v-for="item in channelListData"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="tips"
+                placement="top"
+              >
+                <el-button
+                  class="hide-btn"
+                  type="info"
+                  icon="el-icon-question"
+                />
+              </el-tooltip>
+            </h3>
+          </div>
+          <div class="title-line">
+            <span class="sml-circle" />
           </div>
           <div
             class="chart-wrapper"
           >
-            <div class="bg">
+            <h4>
+              <span class="sml-circle fixed-circle" />
+              NPS客户忠诚度趋势
+              <span style="float: right"> NPS YTD
+                <span style="font-size: 20px;color: #ffa523">74.6%</span>
+              </span>
+              <el-radio-group
+                v-model="NPSType"
+                class="fixed-top-right"
+                @change="getNPSLoyaltyTrendByChannel"
+              >
+                <el-radio-button
+                  v-for="item in NPSListData"
+                  :key="item"
+                  :label="item"
+                />
+              </el-radio-group>
+            </h4>
+          </div>
+          <div
+            class="chart-wrapper"
+          >
+            <line-chart
+              :data="NPSLoyaltyTrendByChannelData"
+              height="180px"
+            />
+          </div>
+          <el-row>
+            <div class="">
               <h3 class="padding10">
-                <span class="dark-yellow">·</span>工单30s接起率
+                <span class="dark-yellow">·</span>Service Event
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -104,207 +106,212 @@
             <div
               class="chart-wrapper"
             >
-              <div class="chart-wrapper">
-                <bar-line-chart
-                  :data="barLineChartData"
-                  height="330px"
+              <h4>
+                <span class="sml-circle fixed-circle" />
+                RV 维修速率趋势
+
+                <el-radio-group
+                  v-model="RVType"
+                  class="fixed-top-right"
+                  @change="getRVList"
+                >
+                  <el-radio-button
+                    v-for="item in RVListData"
+                    :key="item"
+                    :label="item"
+                  />
+                </el-radio-group>
+              </h4>
+              <div
+                class="chart-wrapper"
+              >
+                <line-chart
+                  :data="RVRepairingRateTrendByChannelData"
+                  height="200px"
                 />
               </div>
             </div>
-          </div>
-          <div
-            class="chart-wrapper"
-          >
-            <div class="bg">
-              <h3 class="padding10">
-                <span class="dark-yellow">·</span>索赔完成率
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="tips"
-                  placement="top"
-                >
-                  <el-button
-                    class="hide-btn"
-                    type="info"
-                    icon="el-icon-question"
-                  />
-                </el-tooltip>
-              </h3>
-            </div>
-            <div class="title-line">
-              <span class="sml-circle" />
+            <div
+              class="chart-wrapper"
+            >
+              <h4>
+                <span class="sml-circle fixed-circle" />
+                TSR完成率
+              </h4>
+              <div
+                class="chart-wrapper"
+              >
+                <line-chart
+                  :data="TSRRateData"
+                  height="200px"
+                />
+              </div>
             </div>
             <div
               class="chart-wrapper"
             >
-              <el-row>
-                <el-col
-                  :xs="11"
-                  :sm="11"
-                  :lg="11"
-                >
-                  <gauge-chart
-                    :data="gaugeChartData"
-                    height="360px"
-                  />
-                </el-col>
-                <el-col
-                  :xs="11"
-                  :sm="11"
-                  :lg="11"
-                >
-                  <gauge-chart
-                    :data="gaugeChartData1"
-                    height="360px"
-                  />
-                </el-col>
-              </el-row>
+              <h4>
+                <span class="sml-circle fixed-circle" />
+                Case Qty维修事件数量
+              </h4>
+              <div
+                class="chart-wrapper"
+              >
+                <waterfall-chart
+                  :data="caseQtyData"
+                  height="220px"
+                />
+              </div>
             </div>
+          </el-row>
+        </div>
+      </el-col>
+      <el-col
+        :xs="8"
+        :sm="8"
+        :lg="8"
+      >
+        <div class="bg">
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>EFFICIENCY
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="tips"
+              placement="top"
+            >
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
+              />
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
+          </div>
+          <div
+            class="chart-wrapper rate"
+          >
+            <el-row>
+              <el-col
+                :xs="8"
+                :sm="8"
+                :lg="8"
+              >
+                <div
+                  v-if="dealerUtilizationData.overview"
+                  class="light-blue"
+                >
+                  <p>
+                    {{ dealerUtilizationData.overview.month }}综合利用率
+                  </p>
+                  <span><i>{{ dealerUtilizationData.overview.actualValue *100 }}</i>%</span>
+                </div>
+              </el-col>
+              <el-col
+                :xs="8"
+                :sm="8"
+                :lg="8"
+              >
+                <div
+                  v-if="dealerUtilizationData.sales"
+                  class="soft-blue"
+                >
+                  <p>
+                    {{ dealerUtilizationData.sales.month }}销售利用率
+                  </p>
+                  <span><i>{{ dealerUtilizationData.sales.actualValue *100 }}</i>%</span>
+                </div>
+              </el-col>
+              <el-col
+                :xs="8"
+                :sm="8"
+                :lg="8"
+              >
+                <div
+                  v-if="dealerUtilizationData.service"
+                  class="blue"
+                >
+                  <p>
+                    {{ dealerUtilizationData.service.month }}服务利用率
+                  </p>
+                  <span><i>{{ dealerUtilizationData.service.actualValue *100 }}</i>%</span>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="chart-wrapper">
+            <h4><span class="sml-circle fixed-circle" />综合利用率</h4>
+            <gradients-bar-chart
+              :data="overviewRateData"
+              height="240px"
+            />
+          </div>
+          <div class="chart-wrapper">
+            <h4><span class="sml-circle fixed-circle" />销售利用率</h4>
+            <gradients-bar-chart
+              :data="salesRateData"
+              height="241px"
+            />
+          </div>
+          <div class="chart-wrapper">
+            <h4><span class="sml-circle fixed-circle" />服务利用率</h4>
+            <gradients-bar-chart
+              :data="serviceRateData"
+              height="241px"
+            />
           </div>
         </div>
       </el-col>
       <el-col
-        :xs="7"
-        :sm="7"
-        :lg="7"
+        :xs="8"
+        :sm="8"
+        :lg="8"
       >
         <div class="bg">
-          <div
-            class="chart-wrapper"
-          >
-            <div class="">
-              <h3 class="padding10">
-                <span class="dark-yellow">·</span>NPS客户忠诚度趋势
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="tips"
-                  placement="top"
-                >
-                  <el-button
-                    class="hide-btn"
-                    type="info"
-                    icon="el-icon-question"
-                  />
-                </el-tooltip>
-              </h3>
-            </div>
-            <div class="title-line">
-              <span class="sml-circle" />
-            </div>
-            <div
-              class="chart-wrapper"
+          <h3 class="padding10">
+            <span class="dark-yellow">·</span>Efficiency-central
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="tips"
+              placement="top"
             >
-              <line-chart
-                :data="lineChartData"
-                height="293px"
+              <el-button
+                class="hide-btn"
+                type="info"
+                icon="el-icon-question"
               />
-            </div>
+            </el-tooltip>
+          </h3>
+          <div class="title-line">
+            <span class="sml-circle" />
           </div>
+
           <div
             class="chart-wrapper"
           >
-            <div class="bg">
-              <h3 class="padding10">
-                <span class="dark-yellow">·</span>分公司NPS客户忠诚度
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="tips"
-                  placement="top"
-                >
-                  <el-button
-                    class="hide-btn"
-                    type="info"
-                    icon="el-icon-question"
-                  />
-                </el-tooltip>
-              </h3>
-            </div>
-            <div class="title-line">
-              <span class="sml-circle" />
-            </div>
-            <div
-              class="chart-wrapper"
-            >
-              <dub-bar-chart
-                :data="dubBarChartData"
-                height="600px"
-              />
-            </div>
+            <h4><span class="sml-circle fixed-circle" />CSH LT 30天完成率</h4>
+            <gauge-chart
+              :data="gaugeChartData30D"
+              height="280px"
+            />
+            <h4><span class="sml-circle fixed-circle" />分公司 LT 45天完成率</h4>
+            <gauge-chart
+              :data="gaugeChartData45D"
+              height="280px"
+            />
           </div>
-        </div>
-      </el-col>
-      <el-col
-        :xs="7"
-        :sm="7"
-        :lg="7"
-      >
-        <div class="bg">
+
           <div
             class="chart-wrapper"
           >
-            <div class="">
-              <h3 class="padding10">
-                <span class="dark-yellow">·</span>RV维修速率趋势
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="tips"
-                  placement="top"
-                >
-                  <el-button
-                    class="hide-btn"
-                    type="info"
-                    icon="el-icon-question"
-                  />
-                </el-tooltip>
-              </h3>
-            </div>
-            <div class="title-line">
-              <span class="sml-circle" />
-            </div>
-            <div
-              class="chart-wrapper"
-            >
-              <line-chart
-                :data="lineChartData1"
-                height="293px"
-              />
-            </div>
-          </div>
-          <div
-            class="chart-wrapper"
-          >
-            <div class="bg">
-              <h3 class="padding10">
-                <span class="dark-yellow">·</span>分公司RV维修速率
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="tips"
-                  placement="top"
-                >
-                  <el-button
-                    class="hide-btn"
-                    type="info"
-                    icon="el-icon-question"
-                  />
-                </el-tooltip>
-              </h3>
-            </div>
-            <div class="title-line">
-              <span class="sml-circle" />
-            </div>
-            <div
-              class="chart-wrapper"
-            >
-              <dub-bar-chart
-                :data="dubBarChartData1"
-                height="600px"
-              />
-            </div>
+            <h4><span class="sml-circle fixed-circle" />掉线率&30S连接率</h4>
+            <line-chart
+              :data="abandonRateData"
+              height="290px"
+            />
           </div>
         </div>
       </el-col>
@@ -322,10 +329,24 @@ import mapChart from '../../components/Charts/mapChart.vue'
 import actPieChart from '../../components/Charts/ActPieChart.vue'
 import dubBarChart from '../../components/Charts/DubBarChart.vue'
 import treeBarChart from '../../components/Charts/treeBarChart.vue'
-import barLineChart from '@/components/Charts/barLineChart.vue'
+import gradientsBarChart from '@/components/Charts/gradientsBarChart.vue'
 import GaugeChart from '@/components/Charts/GaugeChart.vue'
+import waterfallChart from '@/components/Charts/waterfallChart.vue'
 
-import { } from '@/api/chart'
+import {
+  getAbandonRate,
+  getCaseQty,
+  getChannelList,
+  getDealerUtilization,
+  getNPSList,
+  getNPSLoyaltyTrendByChannel,
+  getPickingRateIn30s,
+  getRVList,
+  getRVRepairingRateTrendByChannel,
+  getTSRRate,
+  getWarrantyRate,
+  getAllUtilization
+} from '@/api/chart'
 
   @Component({
     name: 'DashboardAdmin',
@@ -337,80 +358,259 @@ import { } from '@/api/chart'
       actPieChart,
       dubBarChart,
       treeBarChart,
-      barLineChart,
-      GaugeChart
+      gradientsBarChart,
+      GaugeChart,
+      waterfallChart
     }
   })
 
 export default class extends Vue {
     private currentTime:object = new Date()
+    private currentMonth:number = new Date().getMonth()
+    private RVType:string = ''
+    private NPSType:string = ''
+    private channel:string=''
+    private NPS_YTD:string=''
 
-    private barLineChartData:object[] = [{
-      data: [175, 165, 160, 150, 145, 140],
-      title: '工单总数',
-      areaStyle: {},
-      type: 'bar',
-      chartX: ['1月', '2月', '3月', '4月', '5月', '6月']
-    }, {
-      data: [0.25, 0.24, 0.23, 0.22, 0.21, 0.20],
-      title: '30S连起率',
-      yAxisIndex: 1
-    }]
+    private overviewRateData:any = {}
+    private salesRateData:any = {}
+    private serviceRateData:any = {}
 
-    private gaugeChartData:object = {
-      data: [{ value: 83.12, name: '分公司LT 45天完成率' }],
+    private gaugeChartData45D:any = {
+      data: [{ value: 0, name: '分公司LT 45天完成率' }],
       name: '分公司LT 45天完成率'
     }
 
-    private gaugeChartData1:object = {
-      data: [{ value: 73.12, name: 'CSH LT 30天完成率' }],
+    private gaugeChartData30D:any = {
+      data: [{ value: 0, name: 'CSH LT 30天完成率' }],
       name: 'CSH LT 30天完成率'
     }
 
-    private lineChartData:object[] = [{
-      data: [0.631, 0.681, 0.611, 0.661, 0.601, 0.691],
-      title: 'NPS客户忠诚度',
-      areaStyle: {},
-      chartX: ['1月', '2月', '3月', '4月', '5月', '6月']
+    private abandonRateData:object[] = []
+    private caseQtyData:any = [{
+      data: [],
+      chartX: []
     }]
 
-    private lineChartData1:object[] = [{
-      data: [0.631, 0.681, 0.611, 0.661, 0.601, 0.691],
-      title: 'on-highway',
-      areaStyle: {},
-      chartX: ['1月', '2月', '3月', '4月', '5月', '6月']
-    }, {
-      data: [0.531, 0.581, 0.411, 0.361, 0.451, 0.631],
-      areaStyle: {},
-      title: 'off-highway'
+    private channelListData:any = {}
+    private dealerUtilizationData:any = {}
+
+    private NPSListData:[] = []
+    private RVListData:[] = []
+    private NPSLoyaltyTrendByChannelData:object[] = [{
+      data: [],
+      chartX: []
     }]
 
-    private dubBarChartData:object = {
-      grade: ['JNDB', 'GZDB', 'WHDB', 'SH CSH', 'CEBJ', 'SYDB', 'JJJ CSH', 'XADB', 'URDB', 'LN CSH', 'SX CSH', 'CY CSH', 'SHDB', 'CDDB', 'SCEC'],
-      cost: [95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81],
-      totalCost: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
-    }
+    private TSRRateData:object[] = [{
+      data: [],
+      chartX: []
+    }]
 
-    private dubBarChartData1:object = {
-      grade: ['JNDB', 'GZDB', 'WHDB', 'SH CSH', 'CEBJ', 'SYDB', 'JJJ CSH', 'XADB', 'URDB', 'LN CSH', 'SX CSH', 'CY CSH', 'SHDB', 'CDDB', 'SCEC'],
-      cost: [95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81],
-      totalCost: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
-    }
+    private RVRepairingRateTrendByChannelData:object[] = []
+
+    private warrantyRateData:any = {}
 
     async mounted() {
+      // 初始化
+      await this.getChannelList()
+      this.init()
       // init时渲染
       setInterval(async() => {
         this.currentTime = new Date()
-        // 初始化
+        this.currentMonth = new Date().getMonth()
         if (new Date().getMinutes() === 15 && new Date().getSeconds() === 0) {
           // 一小时更新一次
 
           if (new Date().getHours() === 16) {
             // 一天更新一次
-
+            await this.getChannelList()
+            await this.getNPSList()
+            await this.getRVList()
+            this.getNPSLoyaltyTrendByChannel()
+            this.getRVRepairingRateTrendByChannel()
+            this.getTSRRate()
+            this.getDealerUtilization()
+            this.getWarrantyRate()
+            this.getAbandonRate()
+            this.getAllUtilization()
+            this.getCaseQty()
           }
         }
       }, 1000)
+    }
+
+    async init() {
+      await this.getNPSList()
+      await this.getRVList()
+      this.getNPSLoyaltyTrendByChannel()
+      this.getRVRepairingRateTrendByChannel()
+      this.getTSRRate()
+      this.getDealerUtilization()
+      this.getWarrantyRate()
+      this.getAbandonRate()
+      this.getAllUtilization()
+      this.getCaseQty()
+    }
+
+    async getAbandonRate() {
+      const data1 = await getAbandonRate({ params: { channel: this.channel } })
+      const data2 = await getPickingRateIn30s({ params: { channel: this.channel } })
+
+      const target:any[] = [{
+        data: [],
+        title: '掉线率',
+        areaStyle: {},
+        chartX: []
+      }, {
+        data: [],
+        areaStyle: {},
+        title: '连接率'
+      }]
+
+      data1.data.forEach((n, i) => {
+        target[0].data.unshift(n.actualValue)
+        target[0].chartX.unshift(n.month)
+      })
+      data2.data.forEach((n, i) => {
+        target[1].data.unshift(n.actualValue)
+      })
+      this.abandonRateData = target
+    }
+
+    async getCaseQty() {
+      const { data } = await getCaseQty({ params: { channel: this.channel } })
+      interface callBackItem {
+        data:number[]
+        chartX:string[]
+      }
+      const target:callBackItem[] = [{
+        data: [],
+        chartX: []
+      }]
+      data.forEach((n, i) => {
+        target[0].data.unshift(n.actualValue)
+        target[0].chartX.unshift(n.month)
+      })
+      this.caseQtyData = target
+    }
+
+    async getChannelList() {
+      const { data } = await getChannelList({ params: { channel: this.channel } })
+      this.channelListData = data
+      this.channel = data[2]
+    }
+
+    async getDealerUtilization() {
+      const { data } = await getDealerUtilization({ params: { channel: this.channel } })
+      this.dealerUtilizationData = data
+    }
+
+    async getNPSList() {
+      const { data } = await getNPSList({ params: { channel: this.channel } })
+      if (!data) return
+      this.NPSListData = data
+      if (!this.NPSType) this.NPSType = data[0]
+    }
+
+    async getRVList() {
+      const { data } = await getRVList({ params: { channel: this.channel } })
+      if (!data) return
+      this.RVListData = data
+      if (!this.RVType) this.RVType = data[0]
+    }
+
+    async getNPSLoyaltyTrendByChannel() {
+      const { data } = await getNPSLoyaltyTrendByChannel({ params: { channel: this.channel, category: this.NPSType } })
+      interface callBackItem {
+        data:number[]
+        chartX:string[]
+      }
+      const target:callBackItem[] = [{
+        data: [],
+        chartX: []
+      }]
+      data.list.forEach((n, i) => {
+        target[0].data.unshift(n.actualValue)
+        target[0].chartX.unshift(n.month)
+      })
+      this.NPS_YTD = data.NPS_YTD
+      this.NPSLoyaltyTrendByChannelData = target
+    }
+
+    async getRVRepairingRateTrendByChannel() {
+      const { data } = await getRVRepairingRateTrendByChannel({ params: { channel: this.channel, category: this.RVType } })
+
+      const target:any[] = [{
+        data: [],
+        title: '',
+        areaStyle: {},
+        chartX: []
+      }, {
+        data: [],
+        areaStyle: {},
+        title: ''
+      }]
+      data.forEach((n, i) => {
+        target[i].title = n.rvDemand
+        n.list.forEach((ni, ii) => {
+          target[i].data.unshift(ni.actualValue)
+          if (target[i].chartX) target[i].chartX.unshift(ni.month)
+        })
+      })
+
+      this.RVRepairingRateTrendByChannelData = target
+    }
+
+    async getTSRRate() {
+      const { data } = await getTSRRate({ params: { channel: this.channel } })
+
+      interface callBackItem {
+        data:number[]
+        chartX:string[]
+      }
+      const target:callBackItem[] = [{
+        data: [],
+        chartX: []
+      }]
+      data.forEach((n, i) => {
+        target[0].data.unshift(n.actualValue)
+        target[0].chartX.unshift(n.month)
+      })
+
+      this.TSRRateData = target
+    }
+
+    async getAllUtilization() {
+      const { data } = await getAllUtilization({ params: { channel: this.channel } })
+      interface callBackItem {
+        data:number[]
+        chartX:string[]
+      }
+      function splData(arr) {
+        const target:callBackItem = {
+          data: [],
+          chartX: []
+        }
+        arr.forEach((n, i) => {
+          target.data.push(n.actualValue)
+          target.chartX.push(n.month)
+        })
+        return target
+      }
+
+      this.overviewRateData = splData(data.overview)
+      this.salesRateData = splData(data.sales)
+      this.serviceRateData = splData(data.service)
+    }
+
+    async getWarrantyRate() {
+      const { data } = await getWarrantyRate({ params: { channel: this.channel } })
+      this.warrantyRateData = data
+      data.forEach((n, i) => {
+        if (n.name === '45D') this.gaugeChartData45D.data[0].value = n.rate
+        if (n.name === '30D') this.gaugeChartData30D.data[0].value = n.rate
+      })
     }
 
     private compare(property) {
@@ -427,6 +627,44 @@ export default class extends Vue {
   .dashboard-editor-container {
     position: relative;
     background-image: url("../../assets/img/bg.png");
+    .fixed-select-right {
+      position: absolute;
+      right: 50px;
+      top:-5px;
+      ::v-deep input{
+        background: #001034;
+        height: 30px;
+        color:#ffffff;
+      }
+      ::v-deep .el-input__suffix{
+        top:5px;
+      }
+    }
+    .fixed-top-right {
+      float: right;
+      margin-right: 10px;
+      z-index:100;
+      ::v-deep span {
+        padding: 3px 15px;
+        font-size: 12px;
+        display: inline-block;
+      }
+      ::v-deep .el-radio-button__inner{
+        background: rgba(255,255,255,0.8);
+      }
+      ::v-deep #screenfull {
+        opacity: 0.5;
+      }
+      ::v-deep .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+        background: #1890ff;
+      }
+      ::v-deep .el-radio-button:last-child .el-radio-button__inner{
+        border-radius: 0 8px 8px 0;
+      }
+      ::v-deep .el-radio-button:first-child .el-radio-button__inner{
+        border-radius:  8px 0 0 8px;
+      }
+    }
     .fixed-select ::v-deep input {
       background: #2d3a4b;
       color:#ffffff;
@@ -443,10 +681,10 @@ export default class extends Vue {
           display: inline-block;
           position: inherit;
           text-align: left;
-          padding: 0 20px;
+          padding: 0 10px;
         }
         span {
-          padding: 0 20px;
+          padding: 0 10px;
           font-size: 15px;
           i {
             font-size: 35px;
@@ -456,12 +694,17 @@ export default class extends Vue {
           }
         }
       }
+
       .light-blue {
         color: #65f5f3;
         padding: 0 0 10px 0;
       }
       .blue {
         color: #3779fd;
+        padding: 0 0 10px 0;
+      }
+      .soft-blue {
+        color: #31a4fe;
         padding: 0 0 10px 0;
       }
       .yellow {
@@ -518,6 +761,10 @@ export default class extends Vue {
       width: 20px;
       background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;
       background-image: url("../../assets/img/rol-circle.png");
+    }
+    .fixed-circle {
+      top:-2px;
+      margin-right: 5px;
     }
     h3.center {
       background-image: url('../../assets/img/title.png');

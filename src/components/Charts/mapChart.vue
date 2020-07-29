@@ -12,7 +12,6 @@ import { Component, Prop, Watch } from 'vue-property-decorator'
 import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 import 'echarts/extension/bmap/bmap'
-import de from 'element-ui/src/locale/lang/de'
 
 const convertData = function(data:any, geoCoordMap) {
   const res:Array<any> = []

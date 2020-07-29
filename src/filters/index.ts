@@ -5,3 +5,8 @@ export { parseTime } from '@/utils'
 export const uppercaseFirstChar = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
+
+export const parseMonth = (month: number) => {
+  month === 0 ? month = 12 : month = month - 1
+  return month
+}

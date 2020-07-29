@@ -6,7 +6,7 @@
       @change="changeDealer"
     >
       <el-radio-button label="经销商" />
-      <el-radio-button label="发展中经销商" />
+      <el-radio-button label="经销商（含发展计划）" />
     </el-radio-group>
     <el-row>
       <div>
@@ -25,22 +25,27 @@
       >
         <div class="bg">
           <div class="total-count">
-            <div v-if="dealer === '经销商'">
-              <div>经销商</div>
-              <div>5671</div>&nbsp;个
+            <div>
+              <div>经销商数量</div>
+              <div>{{ dealerListDataPartNow.data.length }}</div>&nbsp;个
             </div>
-            <div v-if="dealer === '发展中经销商'">
-              <div>发展中经销商</div>
-              <div>5128</div>&nbsp;个
+            <div v-if="dealer === '经销商（含发展计划）'">
+              <div>发展中经销商数量</div>
+              <div>{{ dealerListDataPartDes.data.length }}</div>&nbsp;个
             </div>
           </div>
           <div
             class="chart-wrapper"
           >
-            <map-chart
-              height="600px"
-              :data="dealerListData"
-            />
+            <div
+              onmouseover="clearInterval(timer)"
+              @mouseleave="changeInterval('init')"
+            >
+              <map-chart
+                height="600px"
+                :data="dealerListData"
+              />
+            </div>
             <div class="bg">
               <h3 class="padding10 margin-top20">
                 <span class="dark-yellow">·</span>各省经销商数量分析
@@ -309,6 +314,12 @@ import treeBarChart from '../../components/Charts/treeBarChart.vue'
 
 import { getCountListByAuthLevel, getCountListByEmissionLevel, getCountListByGradedStatus, getCountListByMainframeCompanyName, getCountListByAuthModel, getCountListByIndustrialMarketStatus, getCountListByProvince, getDealerList } from '@/api/chart'
 
+declare global {
+  interface Window {
+    timer: any;
+  }
+}
+
   @Component({
     name: 'DashboardAdmin',
     components: {
@@ -327,8 +338,8 @@ export default class extends Vue {
     private currentTime:object = new Date()
 
     private dealerListData:any = {}
-    private dealerListDataPartNow:any = {}
-    private dealerListDataPartDes:any = {}
+    private dealerListDataPartNow:any = { data: [] }
+    private dealerListDataPartDes:any = { data: [] }
 
     private countListByGradedStatusData:object[] = []
 
@@ -373,11 +384,6 @@ export default class extends Vue {
     }]
 
     async mounted() {
-      setInterval(() => {
-        this.dealer === '经销商' ? this.dealer = '发展中经销商' : this.dealer = '经销商'
-        this.changeDealer()
-      }, 15000)
-
       this.getCountListByAuthLevel()
       this.getCountListByEmissionLevel()
       this.getCountListByGradedStatus()
@@ -387,6 +393,7 @@ export default class extends Vue {
       this.getCountListByProvince()
       await this.getDealerList(1)
       await this.getDealerList(2)
+      this.changeInterval('init')
       await this.changeDealer()
       setInterval(async() => {
         this.currentTime = new Date()
@@ -409,6 +416,16 @@ export default class extends Vue {
           }
         }
       }, 1000)
+    }
+
+    changeInterval(mark) {
+      console.log(mark)
+      if (mark === 'init') {
+        window.timer = setInterval(() => {
+          this.dealer === '经销商' ? this.dealer = '经销商（含发展计划）' : this.dealer = '经销商'
+          this.changeDealer()
+        }, 30000)
+      }
     }
 
     private async changeDealer() {
@@ -603,7 +620,7 @@ export default class extends Vue {
       ::v-deep span {
         padding: 6px 12px;
         display: inline-block;
-        width: 120px;
+        width: 150px;
       }
       ::v-deep .el-radio-button__inner{
         background: rgba(255,255,255,0.8);
@@ -699,11 +716,10 @@ export default class extends Vue {
       margin:0 auto;
     }
     .total-count{
-      width:550px;
+      width:1000px;
       margin:0 auto;
       position: absolute;
       >div{
-        width: 225px;
         text-align: left;
         display: inline-block;
         color:#fff;

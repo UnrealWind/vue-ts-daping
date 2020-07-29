@@ -76,7 +76,7 @@
               <div>5128</div>
             </div>
           </div>
-          <map-chart height="600px"/>
+          <map-chart height="600px" />
         </div>
       </el-col>
       <el-col

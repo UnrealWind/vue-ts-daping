@@ -21,14 +21,14 @@ function getOptions() {
       {
         name: '',
         type: 'gauge',
-        center: ['50%', '60%'],
+        center: ['50%', '80%'],
         data: [],
-        radius: '90%',
-        startAngle: 200, // 开始角度
-        endAngle: -20, // 结束角度
+        radius: '150%',
+        startAngle: 180, // 开始角度
+        endAngle: -0, // 结束角度
         axisLine: { // 坐标轴线
           lineStyle: { // 属性lineStyle控制线条样式
-            color: [[0.09, 'lime'], [0.82, '#1e90ff'], [1, '#ff4500']],
+            color: [[0.20, 'lime'], [0.80, '#1e90ff'], [1, '#ff4500']],
             width: 3,
             shadowColor: '#fff', // 默认透明
             shadowBlur: 10
@@ -64,7 +64,7 @@ function getOptions() {
         title: {
           textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
             fontWeight: 'bolder',
-            fontSize: 12,
+            fontSize: 16,
             color: '#fff',
             shadowColor: '#fff', // 默认透明
             shadowBlur: 10
@@ -74,7 +74,7 @@ function getOptions() {
           shadowColor: '#fff', // 默认透明
           shadowBlur: 5,
           formatter: '{value}%',
-          offsetCenter: [0, '50%'], // x, y，单位px
+          offsetCenter: [0, '15%'], // x, y，单位px
           textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
             fontWeight: '700',
             color: '#fff',

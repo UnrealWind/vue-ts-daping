@@ -53,3 +53,40 @@ export const getCountListByProvince = (params: any) =>
 
 export const getDealerList = (params: any) =>
   request.get('dls/getDealerList', params)
+
+// 4.3
+export const getAbandonRate = (params: any) =>
+  request.get('sse/getAbandonRate', params)
+
+export const getCaseQty = (params: any) =>
+  request.get('sse/getCaseQty', params)
+
+export const getChannelList = (params: any) =>
+  request.get('sse/getChannelList', params)
+
+export const getDealerUtilization = (params: any) =>
+  request.get('sse/getDealerUtilization', params)
+
+export const getNPSList = (params: any) =>
+  request.get('sse/getNPSList', params)
+
+export const getNPSLoyaltyTrendByChannel = (params: any) =>
+  request.get('sse/getNPSLoyaltyTrendByChannel', params)
+
+export const getPickingRateIn30s = (params: any) =>
+  request.get('sse/getPickingRateIn30s', params)
+
+export const getRVList = (params: any) =>
+  request.get('sse/getRVList', params)
+
+export const getRVRepairingRateTrendByChannel = (params: any) =>
+  request.get('sse/getRVRepairingRateTrendByChannel', params)
+
+export const getTSRRate = (params: any) =>
+  request.get('sse/getTSRRate', params)
+
+export const getWarrantyRate = (params: any) =>
+  request.get('sse/getWarrantyRate', params)
+
+export const getAllUtilization = (params: any) =>
+  request.get('sse/getAllUtilization', params)
